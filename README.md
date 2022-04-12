@@ -64,9 +64,9 @@ This config:
 {
   "name": "NFT-Project-XY",
   "amount": 1,
-  "exectionDate": "{Date.now()}",
+  "executionDate": "{Date.now()}",
   "assets": {
-    "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{exectionDate}.png",
+    "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{executionDate}.png",
     "inputPath": "./Input/{name}"
   }
 }
@@ -78,7 +78,7 @@ Will evaluate to:
 {
   "name": "NFT-Project-XY",
   "amount": 1,
-  "exectionDate": "1649725612780",
+  "executionDate": "1649725612780",
   "assets": {
     "outputPath": "./Output/NFT-Project-XY/image/image 1 of 1 - #1649725612780.png",
     "inputPath": "./Input/NFT-Project-XY"
