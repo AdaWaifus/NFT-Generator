@@ -1,0 +1,7 @@
+arrowParens: avoid
+bracketSpacing: false
+endOfLine: auto
+htmlWhitespaceSensitivity: strict
+printWidth: 110
+singleQuote: true
+trailingComma: all

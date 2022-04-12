@@ -1,0 +1,4 @@
+{
+  "projectsGlob": "./projects/*",
+  "nftStorageApiKey": "Add here your API key from https://nft.storage for the auto upload of NFTs to the IPFS"
+}

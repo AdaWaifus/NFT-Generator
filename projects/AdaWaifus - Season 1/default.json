@@ -1,0 +1,51 @@
+{
+  "name": "Default",
+  "amount": 30,
+  "assets": {
+    "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
+    "outputSize": {
+      "width": 1024,
+      "height": 1024
+    },
+    "inputPath": "./Input/{name}",
+    "order": ["Background", "Skin", "Mouth", "Hairstyle", "Clothing", "Eyes", "Ears", "Accessory"],
+    "restrictions": {
+      "background": [
+        {
+          "matches": ["Cardano"],
+          "choose": {
+            "Skin": ["*"],
+            "Mouth": ["*"],
+            "Hairstyle": ["*"],
+            "Clothing": ["Pullover Black"],
+            "Eyes": ["*"],
+            "Ears": ["*"],
+            "Accessory": ["*"]
+          }
+        }
+      ]
+    }
+  },
+  "schema": {
+    "outputPath": "./Output/{name}/schema/schema {index +1} of {amount} - #{totalIndex}.json",
+    "attributesKey": "attributes",
+    "format": {
+      "name": "AdaWaifus #{totalIndex}",
+      "artist": "KIVI.ART",
+      "artist_url": "https://kivi.art",
+      "publisher": "AdaWaifus.io",
+      "twitter": "https://twitter.com/adawaifus",
+      "homepage": "https://adawaifus.io",
+      "assetType": "NFT",
+      "mediaType": "{mediaType}",
+      "image": ["ipfs://", "{cid}"],
+      "attributes": {
+        "collection": "Season 1",
+        "type": "{name}"
+      }
+    }
+  },
+  "rarityCollection": {
+    "outputPath": "./Output/{name}/rarityCollection.json"
+  }
+}
