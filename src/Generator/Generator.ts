@@ -16,15 +16,15 @@ export interface ImageOutput {
 }
 
 export class Generator {
-  #config: Config;
+  readonly #config: Config;
+  readonly #nftStorageUpload: NFTStorageUpload | undefined;
   #imageGenerator: ImageGenerator;
-  #schmaGenerator: SchemaGenerator;
-  #nftStorageUpload: NFTStorageUpload | undefined;
+  #schemaGenerator: SchemaGenerator;
 
   constructor(config: Config, nftStorageUpload?: NFTStorageUpload) {
     this.#config = config;
     this.#imageGenerator = new ImageGenerator(config);
-    this.#schmaGenerator = new SchemaGenerator(config);
+    this.#schemaGenerator = new SchemaGenerator(config);
     this.#nftStorageUpload = nftStorageUpload;
   }
 
@@ -67,7 +67,7 @@ export class Generator {
             ? await this.#nftStorageUpload.uploadFile(path).catch(() => '')
             : '';
 
-          const schemaOutput = await this.#schmaGenerator.generate(layers, {
+          const schemaOutput = await this.#schemaGenerator.generate(layers, {
             ...literalVariables,
             cid,
             mediaType,

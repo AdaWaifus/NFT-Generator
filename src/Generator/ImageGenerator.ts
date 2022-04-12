@@ -1,8 +1,8 @@
 import {dirname, join} from 'path';
 import fg from 'fast-glob';
 import sharp from 'sharp';
-import {Config, ChooseRestriction} from './../Config';
-import {normalizePath, insertStringVariables, splitAttributeAndRarity} from './../utils';
+import {Config, ChooseRestriction} from '../Config';
+import {normalizePath, insertStringVariables, splitAttributeAndRarity} from '../utils';
 
 const shuffleArray = <T>(arr: T[]): T[] =>
   arr.reduce(
@@ -15,26 +15,26 @@ const shuffleArray = <T>(arr: T[]): T[] =>
   );
 
 const pickImage = (images: string[]): string => {
-  const {spreadedImages, chanceSum} = images.reduce(
+  const {commonImages, chanceSum} = images.reduce(
     (obj, imagePath) => {
-      const {chanceSum, spreadedImages} = obj;
+      const {chanceSum, commonImages} = obj;
       const [, rarity] = splitAttributeAndRarity(imagePath);
       const chance = Math.max(0, rarity);
 
       obj.chanceSum += chance;
       [...Array(chance).keys()].forEach(index => {
-        spreadedImages[index + chanceSum] = imagePath;
+        commonImages[index + chanceSum] = imagePath;
       });
 
       return obj;
     },
     {
       chanceSum: 0,
-      spreadedImages: [] as string[],
+      commonImages: [] as string[],
     },
   );
 
-  return shuffleArray(spreadedImages)[Math.floor(Math.random() * chanceSum)];
+  return shuffleArray(commonImages)[Math.floor(Math.random() * chanceSum)];
 };
 
 export interface ImageOutput {

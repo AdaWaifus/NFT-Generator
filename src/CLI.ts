@@ -42,7 +42,7 @@ export const CLI = async (projectsGlob: string) => {
       type: 'number',
       name: 'batchSize',
       message: 'Please select the batch size:',
-      default: 4,
+      default: 1,
       when: (answers: inquirer.Answers) => answers['action'] === 'build' && answers['configPaths'].length > 0,
     },
     {

@@ -1,5 +1,5 @@
 import {writeFile} from 'fs/promises';
-import {Config} from './../Config';
+import {Config} from '../Config';
 import {insertStringVariables, insertStringVariablesIntoValues, getAttributeKeyValuePairs} from './../utils';
 
 export interface SchemaOutput {
