@@ -4,7 +4,7 @@
 /dist
 
 # Output
-/output
+/projects/*/Output
 
 # Node
 /node_modules
