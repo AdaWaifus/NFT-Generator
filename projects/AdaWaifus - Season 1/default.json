@@ -10,14 +10,14 @@
     "inputPath": "./Input/{name}",
     "order": ["Background", "Skin", "Mouth", "Hairstyle", "Clothing", "Eyes", "Ears", "Accessory"],
     "restrictions": {
-      "background": [
+      "Background": [
         {
-          "matches": ["Cardano"],
+          "matches": ["Cardano*"],
           "choose": {
             "Skin": ["*"],
             "Mouth": ["*"],
             "Hairstyle": ["*"],
-            "Clothing": ["Pullover Black"],
+            "Clothing": ["Pullover Black*"],
             "Eyes": ["*"],
             "Ears": ["*"],
             "Accessory": ["*"]

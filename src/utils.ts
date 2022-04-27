@@ -8,7 +8,7 @@ export const normalizePath = (path: string) => path.replace(/\\/g, '/');
 export const splitAttributeAndRarity = (imagePath: string, fallbackRarity: number = 1): [string, number] => {
   const [name, rarity] = basename(imagePath).split(rarityDelimiter);
   const nameWithoutExtension = name.replace(/\.[^/.]+$/, '');
-  return [nameWithoutExtension, typeof rarity === 'number' ? parseInt(rarity, 10) : fallbackRarity];
+  return [nameWithoutExtension, typeof parseInt(rarity, 10) === 'number' ? parseInt(rarity, 10) : fallbackRarity];
 };
 
 export const getAttributeKeyValuePairs = (order: string[], images: string[]) => {
