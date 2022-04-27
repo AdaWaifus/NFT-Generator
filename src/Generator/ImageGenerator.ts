@@ -56,26 +56,30 @@ export class ImageGenerator {
 
     return order
       .map(imagesDirectory => {
+        const lowercaseDirectory = imagesDirectory.toLocaleLowerCase();
         const useGlob = (globs: string[]) =>
-          fg.sync(globs.map(glob => normalizePath(join(imagesDirectory, glob))), { caseSensitiveMatch: false });
+          fg.sync(
+            globs.map(glob => normalizePath(join(imagesDirectory, glob))),
+            {caseSensitiveMatch: false},
+          );
         const currChooseRestrictions = chooseRestrictions
-          .map(chooseObj => chooseObj[imagesDirectory])
+          .map(chooseObj => chooseObj[lowercaseDirectory])
           .filter(choose => choose !== undefined)
           .flat();
 
         const ignoreLayer = currChooseRestrictions.includes(null);
-        const hasRestrictions = !!restrictions?.[imagesDirectory];
+        const hasRestrictions = !!restrictions?.[lowercaseDirectory];
         const hasChooseRestrictions = currChooseRestrictions.length > 0;
 
         const allImages = images.filter(imagePath => normalizePath(dirname(imagePath)) === imagesDirectory);
         const choosedImages = useGlob(
-          currChooseRestrictions.filter(chooseValue => typeof chooseValue === 'string') as string[],
+          currChooseRestrictions.filter(chooseValue => !!chooseValue) as string[],
         );
         const pickedImage = ignoreLayer ? '' : pickImage(hasChooseRestrictions ? choosedImages : allImages);
 
         const appliedRestriction =
           hasRestrictions && pickedImage
-            ? restrictions[imagesDirectory].find(restriction =>
+            ? restrictions[lowercaseDirectory].find(restriction =>
                 useGlob(restriction.matches).includes(pickedImage),
               )
             : null;

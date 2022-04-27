@@ -14,14 +14,24 @@ const isEmptyObject = (obj: Record<string, unknown>) =>
 const transformOrderKeyObject = <T>(
   basePath: string,
   order: string[],
-  object?: Record<string, T>,
+  object: Record<string, T> | undefined,
+  caseSensitive: boolean = false,
 ): Record<string, T> =>
   Object.entries(object || {}).reduce((obj, [relativeOrderDirPath, value]) => {
     const absoluteDirPath = resolvePath(basePath, relativeOrderDirPath);
 
-    if (order.includes(absoluteDirPath)) {
-      obj[absoluteDirPath] = value;
+    if (caseSensitive) {
+      if (order.includes(absoluteDirPath)) {
+        obj[absoluteDirPath] = value;
+      }
+    } else {
+      const lowercaseDirPath = absoluteDirPath.toLocaleLowerCase();
+      const lowercaseOrder = order.map(item => item.toLocaleLowerCase());
+      if (lowercaseOrder.includes(lowercaseDirPath)) {
+        obj[lowercaseDirPath] = value;
+      }
     }
+
     return obj;
   }, {} as Record<string, T>);
 
@@ -148,6 +158,7 @@ export class Config {
             fileExtensions.map(fileExtension =>
               normalizePath(join(imagesDirectory, `**/*.${fileExtension}`)),
             ),
+            {caseSensitiveMatch: false},
           ),
         )
         .flat(),
