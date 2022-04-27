@@ -89,7 +89,6 @@ Will evaluate to:
 #### Assets order
 
 The `order` array in the `assets` object relates to the image directories which should be included.
-This config:
 
 ```js
 {
@@ -106,7 +105,7 @@ Would include all the images of the directories:
 - `./Input/{name}/skin`
 - `./Input/{name}/mouth`
 
-Note that the directory names in the `order` array are **case insensitive**. It doesn't matter if you write `background` or `Background` as long as there is a folder with this name it will be picked up.
+**Note:** the directory names in the `order` array are **case insensitive**. It doesn't matter if you write `background` or `Background` as long as there is a folder with this name it will be picked up.
 
 #### Image restrictions
 
