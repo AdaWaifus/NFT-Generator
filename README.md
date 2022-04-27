@@ -30,7 +30,7 @@ interface RawConfigFile {
   assets: {
     outputPath: string; // output path of image files
     inputPath: string; // path of the directory which holds the folder with the input images
-    order: string[]; // the layering order of the input images. e.g.: ["Background", "Skin", "Mouth"]
+    order: string[]; // the layering order of the input images. e.g.: ["Background", "Skin", "Mouth"] (not case sensitive)
     outputSize?: Size; // output size of the nft image (Default: original size)
     fileExtensions?: string[]; // array of supported input image extensions (Default: ['png', 'jpg', 'jpeg'])
     restrictions?: Record<string, RestrictionItem[]>; // restrictions which apply for each image
@@ -86,6 +86,28 @@ Will evaluate to:
 }
 ```
 
+#### Assets order
+
+The `order` array in the `assets` object relates to the image directories which should be included.
+This config:
+
+```js
+{
+  "assets": {
+    "inputPath": "./Input/{name}",
+    "order": ["background", "skin", "mouth"]
+  }
+}
+```
+
+Would include all the images of the directories:
+
+- `./Input/{name}/background`
+- `./Input/{name}/skin`
+- `./Input/{name}/mouth`
+
+Note that the directory names in the `order` array are **case insensitive**. It doesn't matter if you write `background` or `Background` as long as there is a folder with this name it will be picked up.
+
 #### Image restrictions
 
 You can add image restrictions to your layers with the `restrictions` option.
@@ -94,14 +116,14 @@ You can add image restrictions to your layers with the `restrictions` option.
 {
   "restrictions": {
     // a object with keys which must match one of the foldernames provided in the order option
-    "Background": [
+    "background": [
       // here starts the restrictions of the "background" layer
       {
         "matches": ["*transparent*"], // if the background image name matches this set of globs...
         // ...all of the following restrictions apply to the following layers:
         "choose": {
-          "Skin": ["hairy*", "soft*"], // the Skin layer will act like only images which matches those globs are available
-          "Mouth": ["open*"] // the Mouth layer will act like only images which matches those globs are available
+          "skin": ["hairy*", "soft*"], // the skin layer will act like only images which matches those globs are available
+          "mouth": ["open*"] // the mouth layer will act like only images which matches those globs are available
           // not specified layers have no restrictions - you can also use '["*"]' to remove all restrictions explicitely on following layers.
         }
       }
@@ -109,3 +131,5 @@ You can add image restrictions to your layers with the `restrictions` option.
   }
 }
 ```
+
+All of the field names which have to correspond to a value in the `order` array, and the glob patterns are **case insensitive**.
