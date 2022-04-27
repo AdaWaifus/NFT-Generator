@@ -10,7 +10,7 @@
     "inputPath": "./Input/{name}",
     "order": ["Background", "Skin", "Mouth", "Hairstyle", "Clothing", "Eyes", "Ears", "Accessory"],
     "restrictions": {
-      "Background": [
+      "background": [
         {
           "matches": ["Cardano*"],
           "choose": {

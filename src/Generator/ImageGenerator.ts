@@ -57,7 +57,7 @@ export class ImageGenerator {
     return order
       .map(imagesDirectory => {
         const useGlob = (globs: string[]) =>
-          fg.sync(globs.map(glob => normalizePath(join(imagesDirectory, glob))));
+          fg.sync(globs.map(glob => normalizePath(join(imagesDirectory, glob))), { caseSensitiveMatch: false });
         const currChooseRestrictions = chooseRestrictions
           .map(chooseObj => chooseObj[imagesDirectory])
           .filter(choose => choose !== undefined)
