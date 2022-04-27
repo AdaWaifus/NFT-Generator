@@ -5,7 +5,7 @@
   "author": "devMonkeys",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && node dist/index.js --no-warning"
   },
   "dependencies": {
     "fast-glob": "^3.2.11",

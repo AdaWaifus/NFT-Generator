@@ -14,7 +14,7 @@
         {
           "matches": ["cardano*"],
           "choose": {
-            "clothing": ["pullover black*"]
+            "clothing": null
           }
         }
       ]
