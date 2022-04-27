@@ -123,12 +123,61 @@ You can add image restrictions to your layers with the `restrictions` option.
         "choose": {
           "skin": ["hairy*", "soft*"], // the skin layer will act like only images which matches those globs are available
           "mouth": ["open*"] // the mouth layer will act like only images which matches those globs are available
-          // not specified layers have no restrictions - you can also use '["*"]' to remove all restrictions explicitely on following layers.
+          // not specified layers have no restrictions
         }
       }
     ]
   }
 }
 ```
+
+Use `["*"]` to remove all restrictions explicitly:
+
+```js
+{
+  "restrictions": {
+    "background": [
+      {
+        "matches": ["*transparent*"],
+        "choose": {
+          "skin": ["hairy*", "soft*"],
+          "mouth": ["open*"] // mouth is restricted
+        }
+      }
+    ],
+    "skin": [
+      {
+        "matches": ["soft*"],
+        "choose": {
+          "mouth": ["*"] // mouth restriction is removed
+        }
+      }
+    ]
+  }
+}
+```
+
+In the above example even though the `mouth` layer was restricted to `["open*"]`, the restriction was removed if the `skin` images matches the `soft*` glob.
+Instead of removing the restriction it can also be changed to something else.
+
+Use `null` to remove the layer from generation:
+
+```js
+{
+  "restrictions": {
+    "background": [
+      {
+        "matches": ["*transparent*"],
+        "choose": {
+          "skin": ["hairy*", "soft*"],
+          "mouth": null
+        }
+      }
+    ]
+  }
+}
+```
+
+In this example the `mouth` layer is not included in the image generation, so the final images simply won't have a `mouth` layer.
 
 All of the field names which have to correspond to a value in the `order` array, and the glob patterns are **case insensitive**.
