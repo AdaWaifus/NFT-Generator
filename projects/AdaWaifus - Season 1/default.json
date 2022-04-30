@@ -8,13 +8,29 @@
       "height": 1024
     },
     "inputPath": "./Input/{name}",
-    "order": ["background", "skin", "mouth", "hairstyle", "clothing", "eyes", "ears", "accessory"],
+    "order": ["Background", "Skin", "Mouth", "Hairstyle", "Clothing", "Eyes", "Ears", "Accessory"],
     "restrictions": {
-      "background": [
+      "Background": [
         {
-          "matches": ["cardano*"],
+          "matches": ["Cardano*"],
           "choose": {
-            "clothing": null
+            "Clothing": ["Pullover Black*"]
+          }
+        }
+      ],
+      "Ears": [
+        {
+          "matches": ["Wolf Kivi*"],
+          "choose": {
+            "Hairstyle": ["Piggy Kivi*"]
+          }
+        }
+      ],
+      "Hairstyle": [
+        {
+          "matches": ["Piggy Kivi*"],
+          "choose": {
+            "Ears": ["Wolf Kivi*"]
           }
         }
       ]
