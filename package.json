@@ -9,17 +9,17 @@
   },
   "dependencies": {
     "fast-glob": "^3.2.11",
-    "inquirer": "^8.2.0",
+    "inquirer": "^8.2.4",
     "mime": "^3.0.0",
-    "nft.storage": "^6.0.0",
-    "sharp": "^0.29.3"
+    "nft.storage": "^6.3.0",
+    "sharp": "^0.30.6"
   },
   "devDependencies": {
-    "@types/inquirer": "^8.2.0",
+    "@types/inquirer": "^8.2.1",
     "@types/mime": "^2.0.3",
     "@types/node": "^16.11.26",
-    "@types/sharp": "^0.29.5",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "@types/sharp": "^0.30.2",
+    "prettier": "^2.6.2",
+    "typescript": "^4.7.2"
   }
 }

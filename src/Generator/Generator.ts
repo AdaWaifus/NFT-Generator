@@ -7,7 +7,7 @@ import {NFTStorageUpload} from '../NFTStorage';
 import {ImageGenerator} from './ImageGenerator';
 import {SchemaGenerator} from './SchemaGenerator';
 
-sharp.concurrency(4);
+sharp.concurrency(1);
 
 export interface ImageOutput {
   path: string;
@@ -30,7 +30,7 @@ export class Generator {
 
   async generate(indexOffset: number = 0, batchSize: number = sharp.concurrency()): Promise<void> {
     const {amount, assets, schema} = this.#config;
-    const {outputPath: assetsOutputPath} = assets;
+    const {outputPath: assetsOutputPath, images} = assets;
     const {outputPath: schemaOutputPath} = schema;
     const finalBatchSize = Math.min(amount, batchSize);
     const assetsOutputDir = dirname(assetsOutputPath);
@@ -40,6 +40,15 @@ export class Generator {
     console.log(`Image Output: ${assetsOutputDir}.`);
     console.log(`Schema Output: ${schemaOutputDir}.`);
     console.log(`Batch size: ${finalBatchSize}. Sharp concurrency: ${sharp.concurrency()}.`);
+
+    console.log(`Checking images for validity...`);
+    for (let i = 0; i < images.length; i++) {
+      const currentImage = images[i];
+      await sharp(currentImage).toBuffer().catch(() => {
+        console.log(`Image "${currentImage}" is corrupted.`);
+        process.exit(1);
+      });
+    }
 
     await rm(assetsOutputDir, {recursive: true, force: true});
     await mkdir(assetsOutputDir, {recursive: true});
