@@ -14,7 +14,13 @@
         {
           "matches": ["Cardano*"],
           "choose": {
-            "Clothing": ["Pullover Black*"]
+            "Clothing": ["Pullover Black*", "Pullover Green*"]
+          }
+        },
+        {
+          "matches": ["Flat Blue*"],
+          "choose": {
+            "Clothing": ["Shirt White-Black*"]
           }
         }
       ],
