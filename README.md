@@ -179,8 +179,9 @@ Use `null` to remove the layer from generation:
 ```
 
 In this example the `mouth` layer is not included in the image generation, so the final images simply won't have a `mouth` layer.
-
 All of the field names which have to correspond to a value in the `order` array, and the glob patterns are **case insensitive**.
+
+Layers removed with this option won't appear in the `schema.json` except if you specify the `restrictionRemovedAttributeValue` field to a string which will replace the attribute value for that layer.
 
 #### Preview animation
 

@@ -13,9 +13,23 @@ export const splitAttributeAndRarity = (imagePath: string, fallbackRarity: numbe
   return [nameWithoutExtension, isNaN(rarityNumber) ? fallbackRarity : rarityNumber];
 };
 
-export const getAttributeKeyValuePairs = (order: string[], images: string[]) => {
+export const getAttributeKeyValuePairs = (
+  order: string[],
+  images: string[],
+  restrictionRemovedLayerPrefix?: string,
+  restrictionRemovedAttributeValue?: string,
+) => {
   return images
     .map(imagePath => {
+      if (restrictionRemovedLayerPrefix && restrictionRemovedAttributeValue) {
+        if (imagePath.startsWith(restrictionRemovedLayerPrefix)) {
+          return [
+            basename(dirname(imagePath.substring(restrictionRemovedLayerPrefix.length))),
+            restrictionRemovedAttributeValue,
+          ];
+        }
+      }
+
       const imageDirectory = order.find(
         imageDirectory => normalizePath(dirname(imagePath)) === imageDirectory,
       );

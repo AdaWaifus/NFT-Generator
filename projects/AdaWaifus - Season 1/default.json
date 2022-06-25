@@ -1,6 +1,6 @@
 {
   "name": "Default",
-  "amount": 5,
+  "amount": 1,
   "assets": {
     "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
     "outputSize": {
@@ -12,15 +12,9 @@
     "restrictions": {
       "Background": [
         {
-          "matches": ["Cardano*"],
+          "matches": ["*"],
           "choose": {
-            "Clothing": ["Pullover Black*", "Pullover Green*"]
-          }
-        },
-        {
-          "matches": ["Flat Blue*"],
-          "choose": {
-            "Clothing": ["Shirt White-Black*"]
+            "Clothing": null
           }
         }
       ],
@@ -45,6 +39,7 @@
   "schema": {
     "outputPath": "./Output/{name}/schema/schema {index +1} of {amount} - #{totalIndex}.json",
     "attributesKey": "attributes",
+    "restrictionRemovedAttributeValue": "None",
     "format": {
       "name": "AdaWaifus #{totalIndex}",
       "artist": "KIVI.ART",

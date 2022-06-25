@@ -43,6 +43,8 @@ export interface ImageOutput {
   outputInfo: sharp.OutputInfo;
 }
 
+export const restrictionRemovedLayerPrefix = '<*>';
+
 export class ImageGenerator {
   #config: Config;
 
@@ -69,13 +71,15 @@ export class ImageGenerator {
 
         const ignoreLayer = currChooseRestrictions.includes(null);
         const hasRestrictions = !!restrictions?.[lowercaseDirectory];
-        const hasChooseRestrictions = currChooseRestrictions.length > 0;
+        const hasChooseRestrictions = !ignoreLayer && currChooseRestrictions.length > 0;
 
         const allImages = images.filter(imagePath => normalizePath(dirname(imagePath)) === imagesDirectory);
         const choosedImages = useGlob(
           currChooseRestrictions.filter(chooseValue => !!chooseValue) as string[],
         );
-        const pickedImage = ignoreLayer ? '' : pickImage(hasChooseRestrictions ? choosedImages : allImages);
+        const pickedImage = `${ignoreLayer ? restrictionRemovedLayerPrefix : ''}${pickImage(
+          hasChooseRestrictions ? choosedImages : allImages,
+        )}`;
 
         const appliedRestriction =
           hasRestrictions && pickedImage
@@ -98,7 +102,9 @@ export class ImageGenerator {
     const {assets} = this.#config;
     const {outputPath: assetsOutputPath, outputSize} = assets;
     const {width, height} = outputSize;
-    const [firstLayer, ...remainingLayers] = layers;
+    const [firstLayer, ...remainingLayers] = layers.filter(
+      layer => !layer.startsWith(restrictionRemovedLayerPrefix),
+    );
     const outputPath = insertStringVariables(assetsOutputPath, variables);
 
     const composition = sharp(firstLayer, {}).composite(remainingLayers.map(layer => ({input: layer})));

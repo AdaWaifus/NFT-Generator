@@ -61,6 +61,7 @@ interface RawConfigFile {
   schema?: {
     outputPath: string;
     attributesKey: string;
+    restrictionRemovedAttributeValue?: string;
     format: {
       name: string;
       [key: string]: unknown;
@@ -178,6 +179,7 @@ export class Config {
       attributesKey: schema?.attributesKey || 'attributes',
       format: schema?.format || {name: ''},
       outputPath: resolvePath(configDirectory, rawSchemaOutputPath),
+      restrictionRemovedAttributeValue: schema?.restrictionRemovedAttributeValue || '',
     };
     this.rarityCollection = {
       outputPath: rarityCollection?.outputPath
@@ -220,6 +222,7 @@ export class Config {
   schema: {
     outputPath: string;
     attributesKey: string;
+    restrictionRemovedAttributeValue: string;
     format: {
       name: string;
       [key: string]: unknown;

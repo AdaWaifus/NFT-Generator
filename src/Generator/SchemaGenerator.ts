@@ -1,5 +1,6 @@
 import {writeFile} from 'fs/promises';
 import {Config} from '../Config';
+import {restrictionRemovedLayerPrefix} from './ImageGenerator';
 import {insertStringVariables, insertStringVariablesIntoValues, getAttributeKeyValuePairs} from './../utils';
 
 export interface SchemaOutput {
@@ -15,7 +16,7 @@ export class SchemaGenerator {
 
   async generate(imageLayers: string[], variables: Record<string, unknown>): Promise<SchemaOutput> {
     const {assets, schema} = this.#config;
-    const {outputPath: schemaOutputPath} = schema;
+    const {outputPath: schemaOutputPath, restrictionRemovedAttributeValue} = schema;
     const outputPath = insertStringVariables(schemaOutputPath, variables);
 
     if (schema) {
@@ -33,7 +34,12 @@ export class SchemaGenerator {
         variables,
       );
 
-      getAttributeKeyValuePairs(order, imageLayers).reduce((obj, [key, value]) => {
+      getAttributeKeyValuePairs(
+        order,
+        imageLayers,
+        restrictionRemovedLayerPrefix,
+        restrictionRemovedAttributeValue,
+      ).reduce((obj, [key, value]) => {
         obj[key] = value;
         return obj;
       }, adaptedFormat[attributesKey] as Record<string, string>);
