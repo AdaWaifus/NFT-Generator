@@ -63,5 +63,15 @@
   },
   "rarityCollection": {
     "outputPath": "./Output/{name}/rarityCollection.json"
+  },
+  "previewAnimation": {
+    "outputPath": "./Output/{name}/preview {index +1} of {quantity}.gif",
+    "sampleSize": 8,
+    "quantity": 4,
+    "animation": {
+      "delay": 800,
+      "repeat": 0,
+      "quality": 10
+    }
   }
 }

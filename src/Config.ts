@@ -69,6 +69,17 @@ interface RawConfigFile {
   rarityCollection?: {
     outputPath: string;
   };
+  previewAnimation?: {
+    outputPath: string;
+    outputSize?: Size;
+    sampleSize?: number;
+    quantity?: number;
+    animation?: {
+      quality?: number;
+      delay?: number;
+      repeat?: number;
+    };
+  };
 }
 
 const defaultFileExtensions = ['png', 'jpg', 'jpeg'];
@@ -103,7 +114,7 @@ export class Config {
       }, {} as Record<string, unknown>),
     );
 
-    const {assets, schema, rarityCollection} = rawConfig;
+    const {assets, schema, rarityCollection, previewAnimation} = rawConfig;
     const {outputPath: rawSchemaOutputPath} = schema || {};
     const {
       restrictions: rawAssetsRestrictions,
@@ -141,8 +152,8 @@ export class Config {
 
     const {width: outputWidth, height: outputHeight} = rawAssetsOutputSize || {};
     const outputSize = {
-      width: outputWidth || undefined,
-      height: outputHeight || undefined,
+      width: outputWidth,
+      height: outputHeight,
     };
 
     this.amount = rawConfig.amount;
@@ -173,9 +184,28 @@ export class Config {
         ? resolvePath(configDirectory, rarityCollection?.outputPath)
         : undefined,
     };
-
+    this.previewAnimation = {
+      outputPath: previewAnimation?.outputPath
+        ? resolvePath(configDirectory, previewAnimation?.outputPath)
+        : undefined,
+      sampleSize:
+        Math.max(1, previewAnimation?.sampleSize || 1) || Math.max(0, Math.min(rawConfig.amount, 10)),
+      quantity: Math.max(1, previewAnimation?.quantity || 1),
+      outputSize: {
+        width: previewAnimation?.outputSize?.width,
+        height: previewAnimation?.outputSize?.height,
+      },
+      animation: {
+        delay: previewAnimation?.animation?.delay || 800,
+        repeat: previewAnimation?.animation?.repeat || 0,
+        quality: previewAnimation?.animation?.quality || 10,
+      },
+    };
     validateOutputPath(this.assets.outputPath, 'assets');
     validateOutputPath(this.schema.outputPath, 'schema');
+    if (this.previewAnimation?.outputPath) {
+      validateOutputPath(this.previewAnimation.outputPath, 'previewAnimation');
+    }
   }
 
   amount: number;
@@ -197,5 +227,16 @@ export class Config {
   };
   rarityCollection: {
     outputPath?: string;
+  };
+  previewAnimation: {
+    outputPath?: string;
+    sampleSize: number;
+    quantity: number;
+    outputSize: Partial<Size>;
+    animation: {
+      quality: number;
+      delay: number;
+      repeat: number;
+    };
   };
 }

@@ -9,7 +9,7 @@ export const CLI = async (projectsGlob: string) => {
       type: 'list',
       name: 'action',
       message: 'Please select your action:',
-      choices: ['build', 'collect rarity'],
+      choices: ['build', 'collect rarity', 'preview animation'],
     },
     {
       type: 'list',
