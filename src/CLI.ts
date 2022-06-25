@@ -48,7 +48,7 @@ export const CLI = async (projectsGlob: string) => {
     {
       type: 'confirm',
       name: 'upload',
-      message: 'Do you wanna upload the images?',
+      message: 'Do you wanna upload the images? (default: No)',
       default: false,
       when: (answers: inquirer.Answers) => answers['action'] === 'build' && answers['configPaths'].length > 0,
     },

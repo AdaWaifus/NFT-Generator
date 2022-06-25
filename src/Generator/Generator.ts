@@ -9,6 +9,29 @@ import {SchemaGenerator} from './SchemaGenerator';
 
 sharp.concurrency(1);
 
+const checkImageValidaity = async (images: string[]) => {
+  console.log(`Checking images for validity...`);
+
+  const corruptedImages: string[] = [];
+  for (let i = 0; i < images.length; i++) {
+    const currentImage = images[i];
+
+    await sharp(currentImage)
+      .toBuffer()
+      .catch(() => {
+        corruptedImages.push(currentImage);
+      });
+  }
+
+  corruptedImages.forEach(corruptedImage => {
+    console.log(`Image "${corruptedImage}" is corrupted.`);
+  });
+
+  if (corruptedImages.length > 0) {
+    process.exit(1);
+  }
+};
+
 export interface ImageOutput {
   path: string;
   layers: string[];
@@ -41,14 +64,7 @@ export class Generator {
     console.log(`Schema Output: ${schemaOutputDir}.`);
     console.log(`Batch size: ${finalBatchSize}. Sharp concurrency: ${sharp.concurrency()}.`);
 
-    console.log(`Checking images for validity...`);
-    for (let i = 0; i < images.length; i++) {
-      const currentImage = images[i];
-      await sharp(currentImage).toBuffer().catch(() => {
-        console.log(`Image "${currentImage}" is corrupted.`);
-        process.exit(1);
-      });
-    }
+    await checkImageValidaity(images);
 
     await rm(assetsOutputDir, {recursive: true, force: true});
     await mkdir(assetsOutputDir, {recursive: true});
