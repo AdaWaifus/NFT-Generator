@@ -59,11 +59,13 @@ export class PreviewAnimation {
     const {quantity, sampleSize, animation, outputPath: previewAnimationOutputPath} = previewAnimation;
 
     if (!width || !height) {
-      throw new Error(`The canvas size could not be determined. Please specify the "outputSize" option.`);
+      throw new Error(
+        `The canvas size could not be determined. Please specify the "previewAnimtion.outputSize" option.`,
+      );
     }
 
     if (!previewAnimationOutputPath) {
-      throw new Error(`The "outputPath" has to be specified.`);
+      throw new Error(`The "previewAnimtion.outputPath" has to be specified.`);
     }
 
     for (let i = 0; i < quantity; i++) {
