@@ -1,6 +1,6 @@
 {
   "name": "Default",
-  "amount": 30,
+  "amount": 5,
   "assets": {
     "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
     "outputSize": {
@@ -65,13 +65,17 @@
     "outputPath": "./Output/{name}/rarityCollection.json"
   },
   "previewAnimation": {
-    "outputPath": "./Output/{name}/preview {index +1} of {quantity}.gif",
-    "sampleSize": 8,
     "quantity": 4,
+    "outputPath": "./Output/{name}/preview/{index +1} of {quantity}.gif",
+    "sampleSize": 8,
     "animation": {
       "delay": 800,
       "repeat": 0,
       "quality": 10
+    },
+    "outputSize": {
+      "width": 750,
+      "height": 750
     }
   }
 }

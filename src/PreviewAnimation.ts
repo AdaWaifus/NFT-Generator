@@ -68,12 +68,15 @@ export class PreviewAnimation {
       throw new Error(`The "previewAnimtion.outputPath" has to be specified.`);
     }
 
+    fs.mkdirSync(dirname(previewAnimationOutputPath), {recursive: true});
+
     for (let i = 0; i < quantity; i++) {
       const {delay, repeat, quality} = animation;
       const canvas = createCanvas(width, height);
       const ctx = canvas.getContext('2d');
 
       const outputPath = insertStringVariables(previewAnimationOutputPath, {index: i, quantity});
+      fs.mkdirSync(dirname(outputPath), {recursive: true});
 
       console.log(`Creating animation: ${outputPath}.`);
 
@@ -88,7 +91,7 @@ export class PreviewAnimation {
         const sampleImagePath = imagePaths[Math.floor(Math.random() * imagePaths.length)];
         const image = await loadImage(sampleImagePath);
 
-        ctx.drawImage(image, 0, 0);
+        ctx.drawImage(image, 0, 0, width, height);
         encoder.addFrame(ctx);
       }
 

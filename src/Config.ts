@@ -189,7 +189,7 @@ export class Config {
         ? resolvePath(configDirectory, previewAnimation?.outputPath)
         : undefined,
       sampleSize:
-        Math.max(1, previewAnimation?.sampleSize || 1) || Math.max(0, Math.min(rawConfig.amount, 10)),
+        Math.max(1, previewAnimation?.sampleSize || 1) || Math.max(1, Math.min(rawConfig.amount, 10)),
       quantity: Math.max(1, previewAnimation?.quantity || 1),
       outputSize: {
         width: previewAnimation?.outputSize?.width,

@@ -181,3 +181,26 @@ Use `null` to remove the layer from generation:
 In this example the `mouth` layer is not included in the image generation, so the final images simply won't have a `mouth` layer.
 
 All of the field names which have to correspond to a value in the `order` array, and the glob patterns are **case insensitive**.
+
+#### Preview animation
+
+You can create and customize animated gif sequences of your generated images with the `previewAnimation` section.
+
+```js
+{
+  "previewAnimation": {
+    "quantity": 1, // the amount of gif animations to generate (in case you don't like the first)
+    "sampleSize": 10, // specifies the slide amount of your gif
+    "outputPath": "./Output/{name}/preview {index +1} of {quantity}.gif", // output path, has to be specified
+    "animation": {
+      "delay": 800, // time in ms until the image changes in the animation.
+      "repeat": 0, // repeat count of the animation. 0 means infinity.
+      "quality": 10 // quality of the animation.
+    },
+    "outputSize": {
+      "width": 1024, // the width of the animation (defaults to your generated images width)
+      "height": 1024 // the height of the animation (defaults to your generated images height)
+    },
+  }
+}
+```
