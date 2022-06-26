@@ -201,7 +201,7 @@ You can create and customize animated gif sequences of your generated images wit
     "outputSize": {
       "width": 1024, // the width of the animation (defaults to your generated images width)
       "height": 1024 // the height of the animation (defaults to your generated images height)
-    },
+    }
   }
 }
 ```
