@@ -1,0 +1,19 @@
+<div class="search" (click)="search.focus()">
+    <input #search type="text" [placeholder]="'common.suche'" (input)="onSearchChange($event)">
+    <button mat-icon-button tabIndex="-1" *ngIf="search.value; else spacer" (click)="search.value = ''; searchValue=''">
+        <mat-icon svgIcon="close"></mat-icon>
+    </button>
+</div>
+
+<div class="checkboxes margin-12 display-flex gap-12 flex-column">
+    <mat-checkbox *ngFor="let variant of variants | filter:searchValue:'name'"
+                  [checked]="this.selectedValues.indexOf(variant.name)> -1"
+                  (change)="changeFilter(variant.name,$event.checked)">
+        <span class="typo-small">{{variant.name}}</span>
+        <span class="typo-small" style="opacity: .4;"> ({{variant.count}})</span>
+    </mat-checkbox>
+</div>
+
+<ng-template #spacer>
+  <div style="width: 32px; height: 32px"></div>
+</ng-template>

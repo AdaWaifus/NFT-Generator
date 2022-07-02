@@ -1,0 +1,58 @@
+:host {
+  height: 100%;
+  display: grid;
+  position: relative;
+  grid-template-rows: 1fr;
+  grid-template-areas: 'content';
+}
+
+.content-wrapper {
+  grid-area: content;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  img {
+    width: 512px;
+  }
+
+  .content {
+    padding: 86px;
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-bottom: 86px;
+    }
+  }
+
+  ul {
+    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    li {
+      padding: 8px 12px;
+      color: var(--color-text);
+      gap: 4px;
+      display: grid;
+      flex-direction: column;
+      border-radius: 8px;
+      background-color: rgba(0, 0, 0, 0.24);
+    }
+  }
+}
+
+.footer {
+  width: 100%;
+  padding: 8px;
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  top: 0;
+  right: 0;
+  position: absolute;
+
+  button {
+    color: var(--color-accent);
+  }
+}

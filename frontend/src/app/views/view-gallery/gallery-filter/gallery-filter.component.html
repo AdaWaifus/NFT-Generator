@@ -1,0 +1,18 @@
+<mat-accordion>
+  <mat-expansion-panel #panel *ngFor="let attribute of attributes" hideToggle>
+
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span class="panel-title typo-small font-weight-800 uppercase color-accent">{{ attribute.title }}</span>
+        <span class="filter-counter typo-small" *ngIf="attribute.totalFilters>0">{{attribute.totalFilters}}</span>
+      </mat-panel-title>
+      <mat-icon *ngIf="panel.expanded" svgIcon="remove"></mat-icon>
+      <mat-icon *ngIf="!panel.expanded" svgIcon="add"></mat-icon>
+    </mat-expansion-panel-header>
+
+    <app-gallery-filter-variants [variants]="attribute.variants"
+                                 (totalFiltersChange)="attribute.totalFilters=$event"
+                                 (filterChange)="onChangeFilter(attribute.title,$event)"></app-gallery-filter-variants>
+
+  </mat-expansion-panel>
+</mat-accordion>

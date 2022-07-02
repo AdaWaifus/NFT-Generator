@@ -1,0 +1,70 @@
+.search {
+  width: auto;
+  padding: 8px 8px 8px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: text;
+
+  background-color: rgb(13 13 13 / 24%);
+  box-shadow: 0 1px 0 0 rgb(143 171 189 / 12%);
+
+
+  input {
+    width: 100%;
+    padding: 0;
+    border: none;
+    color: var(--text-color);
+    font-weight: 800 !important;
+    font-family: 'Nunito', sans-serif;
+    background-color: transparent;
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}
+
+.checkboxes {
+  max-height: 312px;
+  overflow: auto;
+  /* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  scrollbar-width: auto;
+  scrollbar-color: rgba(0, 0, 0, 0.24) transparent;
+
+  /* Chrome, Edge, and Safari */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.24);
+    border-radius: 10px;
+    border: 0 solid transparent;
+  }
+
+  .mat-checkbox {
+    font: inherit;
+
+    ::ng-deep .mat-checkbox-frame {
+      border-color: var(--text-color);
+    }
+
+    ::ng-deep .mat-ripple { display: none; }
+
+    &.mat-checkbox-checked.mat-accent {
+      color: var(--color-accent);
+
+      ::ng-deep .mat-checkbox-background {
+        background-color: var(--color-accent);
+      }
+    }
+  }
+}
