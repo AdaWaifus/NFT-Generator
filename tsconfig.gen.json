@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": false,
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["esnext", "DOM"],
+    "types": ["node"]
+  },
+  "files": [
+    "generator/index.ts",
+    "generator/CLI.ts",
+    "generator/Config.ts",
+    "generator/NFTStorage.ts",
+    "generator/PreviewAnimation.ts",
+    "generator/RarityCollector.ts",
+    "generator/utils.ts",
+    "generator/Generator.ts",
+    "generator/ImageGenerator.ts",
+    "generator/SchemaGenerator.ts"
+  ]
+}

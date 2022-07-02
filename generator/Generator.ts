@@ -1,9 +1,9 @@
+import sharp from 'sharp';
 import {basename, dirname} from 'path';
 import {mkdir, rm} from 'fs/promises';
-import sharp from 'sharp';
 import {getType} from 'mime';
-import {Config} from '../Config';
-import {NFTStorageUpload} from '../NFTStorage';
+import {Config} from './Config';
+import {NFTStorageUpload} from './NFTStorage';
 import {ImageGenerator} from './ImageGenerator';
 import {SchemaGenerator} from './SchemaGenerator';
 
@@ -31,12 +31,6 @@ const checkImageValidaity = async (images: string[]) => {
     process.exit(1);
   }
 };
-
-export interface ImageOutput {
-  path: string;
-  layers: string[];
-  outputInfo: sharp.OutputInfo;
-}
 
 export class Generator {
   readonly #config: Config;

@@ -1,8 +1,8 @@
 import {dirname, join} from 'path';
 import fg from 'fast-glob';
 import sharp from 'sharp';
-import {Config, ChooseRestriction} from '../Config';
-import {normalizePath, insertStringVariables, splitAttributeAndRarity} from '../utils';
+import {Config, ChooseRestriction} from './Config';
+import {normalizePath, insertStringVariables, splitAttributeAndRarity} from './utils';
 
 const shuffleArray = <T>(arr: T[]): T[] =>
   arr.reduce(

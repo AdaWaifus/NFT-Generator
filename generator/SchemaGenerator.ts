@@ -1,7 +1,7 @@
 import {writeFile} from 'fs/promises';
-import {Config} from '../Config';
+import {Config} from './Config';
 import {restrictionRemovedLayerPrefix} from './ImageGenerator';
-import {insertStringVariables, insertStringVariablesIntoValues, getAttributeKeyValuePairs} from './../utils';
+import {insertStringVariables, insertStringVariablesIntoValues, getAttributeKeyValuePairs} from './utils';
 
 export interface SchemaOutput {
   path: string | null;

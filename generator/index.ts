@@ -1,12 +1,12 @@
 import {basename} from 'path';
-import {CLI} from './src/CLI';
-import {Config} from './src/Config';
-import {NFTStorageUpload} from './src/NFTStorage';
-import {Generator} from './src/Generator/Generator';
-import {RarityCollector} from './src/RarityCollector';
-import {PreviewAnimation} from './src/PreviewAnimation';
+import {CLI} from './CLI';
+import {Config} from './Config';
+import {NFTStorageUpload} from './NFTStorage';
+import {Generator} from './Generator';
+import {RarityCollector} from './RarityCollector';
+import {PreviewAnimation} from './PreviewAnimation';
 
-import {projectsGlob, nftStorageApiKey} from './config.json';
+import {projectsGlob, nftStorageApiKey} from '../generator.json';
 
 const main = async () => {
   const cliAnswers = await CLI(projectsGlob);
