@@ -6,8 +6,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "tsc --project tsconfig.gen.json && node dist/generator/index.js",
-    "start-generator": "tsc src/*.ts && node dist/index.js --no-warning",
+    "start-generator": "tsc --project tsconfig.gen.json && node dist/generator/index.js",
     "start-frontend": "ng serve"
   },
   "private": true,
