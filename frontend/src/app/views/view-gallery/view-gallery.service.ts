@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, EMPTY, of, Subject, switchMap} from 'rxjs';
-import {AttributeFilter, ICurrentFilter} from './view-gallery.models';
+import {BehaviorSubject, combineLatest, EMPTY, of, Subject, switchMap} from 'rxjs';
+import {AttributeFilter, IAttributesFromServer, ICurrentFilter, ServerCollection} from './view-gallery.models';
 import {CurrentFilter} from "./view-gallery.classes";
+import {filterCollection, mapAttributesFromServer, mapCollectionFromServer} from "../../app.helper";
+import {HttpClient} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +17,6 @@ export class ViewGalleryService {
     return this._currentFilter.asObservable();
   }
 
-  /* SEEMS NOT NEEDED
   get loadMore() {
     return this._loadMore.asObservable().pipe(
       switchMap(f => {
@@ -26,12 +27,41 @@ export class ViewGalleryService {
       }),
     );
   }
-  */
+
+  public get getCollection2() {
+    return combineLatest([
+      this.collectionFromServer,
+      this.filter,
+      this.loadMore,
+    ]).pipe(filterCollection);
+  }
+
+  // get the collection from the server and map it to front interface
+  private get collectionFromServer() {
+    return this.httpClient
+      .get<ServerCollection[]>(environment.apiUrl + 'collection')
+      .pipe(mapCollectionFromServer); // map using rxjs the json from server to a front end format
+  }
+
+  public get getCollection() {
+    return this.httpClient
+      .get<ServerCollection[]>(environment.apiUrl + 'collection')
+      .pipe(mapCollectionFromServer);
+  }
+
+  // get the attributes from the php server
+  public get getAttributes() {
+    return this.httpClient
+      .get<IAttributesFromServer>(environment.apiUrl + 'attributes')
+      .pipe(mapAttributesFromServer); // map json data from the server to front interfaces using rxjs/map
+  }
 
   private get currentFilter() {
     const f = this._currentFilter.getValue();
     return new CurrentFilter(f);
   }
+
+  constructor(private httpClient: HttpClient) {}
 
   setAttributeFilter(attributeFilter: AttributeFilter) {
     this.slice = 0;
