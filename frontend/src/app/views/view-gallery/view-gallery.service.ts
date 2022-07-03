@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime } from 'rxjs';
-import { AttributeFilter, ICurrentFilter } from './view-gallery.models';
+import { AttributeFilter, IAttributesFromServer, ICurrentFilter, ServerCollection } from './view-gallery.models';
 import { CurrentFilter } from "./view-gallery.classes";
 import { HttpClient } from '@angular/common/http';
-import { ViewGalleryModule } from './view-gallery.module';
+import { environment } from 'frontend/src/environments/environment';
+import { filterCollection, mapCollectionFromServer, mapAttributesFromServer } from '../../app.helper';
 
 @Injectable({
   providedIn: 'any',
@@ -27,7 +28,6 @@ export class ViewGalleryService {
     return this._currentFilter.asObservable();
   }
 
-  // SEEMS NOT NEEDED
   get loadMore() {
     return this._loadMore.asObservable().pipe(
       switchMap(f => {
@@ -39,11 +39,39 @@ export class ViewGalleryService {
     );
   }
 
+  // public get getCollection2() {
+  //   return combineLatest([
+  //     this.collectionFromServer,
+  //     this.filter,
+  //     this.loadMore,
+  //   ]).pipe(filterCollection);
+  // }
+
+  // get the collection from the server and map it to front interface
+  // private get collectionFromServer() {
+  //   return this.httpClient
+  //     .get<ServerCollection[]>(environment.apiUrl + 'collection')
+  //     .pipe(mapCollectionFromServer); // map using rxjs the json from server to a front end format
+  // }
+
+  // public get getCollection() {
+  //   return this.httpClient
+  //     .get<ServerCollection[]>(environment.apiUrl + 'collection')
+  //     .pipe(mapCollectionFromServer);
+  // }
+
+  // // get the attributes from the php server
+  // public get getAttributes() {
+  //   return this.httpClient
+  //     .get<IAttributesFromServer>(environment.apiUrl + 'attributes')
+  //     .pipe(mapAttributesFromServer); // map json data from the server to front interfaces using rxjs/map
+  // }
 
   private get currentFilter() {
     const f = this._currentFilter.getValue();
     return new CurrentFilter(f);
   }
+
 
   setAttributeFilter(attributeFilter: AttributeFilter) {
     this.slice = 0;
