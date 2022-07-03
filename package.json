@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
+    "prestart-frontend": "tsc frontend/generate-asset-files.ts && node frontend/generate-asset-files.js",
     "start-generator": "tsc --project tsconfig.gen.json && node dist/generator/index.js",
     "start-frontend": "ng serve"
   },
