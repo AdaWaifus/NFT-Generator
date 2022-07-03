@@ -4,7 +4,8 @@
     <hr>
     <div class="search" (click)="search.focus()">
       <input #search type="number" placeholder="Search for number..." (input)="onSearchChange($event)">
-      <button (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1" *ngIf="search.value; else spacer">
+      <button (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1"
+        *ngIf="search.value; else spacer">
         <mat-icon svgIcon="close"></mat-icon>
       </button>
     </div>
@@ -22,8 +23,9 @@
     <ng-container *ngIf="collection | async as col">
       <ng-container *ngIf="col.length > 0; else empty">
         <div class="images">
-          <button mat-flat-button *ngFor="let item of col;trackBy: trackById; let index = index" (click)="openDetailDialog(item)">
-            <img src="https://dummyimage.com/512x512/404040/ffffff.png" alt="">
+          <button mat-flat-button *ngFor="let item of col;trackBy: trackById; let index = index"
+            (click)="openDetailDialog(item)">
+            <img [src]="item" alt="">
             <div class="image-footer display-flex flex-column">
               <span class="typo-small font-weight-800 text-align-center">{{ item.name | slice: 10 }}</span>
             </div>

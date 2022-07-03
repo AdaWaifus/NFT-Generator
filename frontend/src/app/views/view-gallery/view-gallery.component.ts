@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
-import {AttributeFilter, IAttributes} from './view-gallery.models';
-import {Collection} from "./view-gallery.classes";
-import {Observable} from "rxjs";
-import {ViewGalleryService} from "./view-gallery.service";
-import {MatDialog} from "@angular/material/dialog";
-import {GalleryDetailDialogComponent} from "./gallery-detail-dialog/gallery-detail-dialog.component";
+import { Component } from '@angular/core';
+import { AttributeFilter, IAttributes } from './view-gallery.models';
+import { Collection } from "./view-gallery.classes";
+import { combineLatest, debounceTime, map, Observable } from "rxjs";
+import { ViewGalleryService } from "./view-gallery.service";
+import { MatDialog } from "@angular/material/dialog";
+import { GalleryDetailDialogComponent } from "./gallery-detail-dialog/gallery-detail-dialog.component";
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-view-gallery',
@@ -12,10 +13,13 @@ import {GalleryDetailDialogComponent} from "./gallery-detail-dialog/gallery-deta
   styleUrls: ['./view-gallery.component.scss'],
 })
 export class ViewGalleryComponent {
-  public collection?: Observable<Collection[]>;
+  public collection?: Observable<Collection[] | undefined>;
   public filters?: Observable<IAttributes[]>;
 
-  constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {}
+  constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
+
+    this.collection = viewGalleryService.projects;
+  }
 
   filterChange(filter: AttributeFilter) {
     this.viewGalleryService.setAttributeFilter(filter);
