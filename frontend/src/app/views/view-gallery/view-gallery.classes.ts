@@ -1,13 +1,13 @@
 import {BehaviorSubject} from 'rxjs';
 import {
-  AttributeFilter,
+  AttributeFilter, IAttributes,
   ICollection,
-  ICurrentFilter,
+  ICurrentFilter, IVariant,
   ServerCollection,
 } from './view-gallery.models';
 import {camelize} from '../../app.utilities';
 
-/* SEEMS NOT NEEDED
+
 export class Variant implements IVariant {
   constructor(public name: string, public count: number) {}
 }
@@ -16,7 +16,7 @@ export class Attributes implements IAttributes {
   public totalFilters = 0;
   constructor(public title: string, public variants: IVariant[]) {}
 }
-*/
+
 
 // TODO ALEX PLEASE DONT USE THIS REMODELLING IN THIS PROJECT, HERE WE NEED TO USE EXACTLY THE GENERATOR CREATED METADATA WHICH CAN CHANGE IN EVERY PROJECT
 export class Collection implements ICollection {
