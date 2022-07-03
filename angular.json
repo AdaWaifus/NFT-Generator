@@ -23,8 +23,18 @@
             "polyfills": "frontend/src/polyfills.ts",
             "tsConfig": "frontend/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["frontend/src/favicon.ico", "frontend/src/assets"],
-            "styles": ["frontend/src/styles.scss"],
+            "assets": [
+              "frontend/src/favicon.ico",
+              "frontend/src/assets",
+              {
+                "glob": "**/*",
+                "input": "projects",
+                "output": "projects"
+              }
+            ],
+            "styles": [
+              "frontend/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -86,8 +96,13 @@
             "tsConfig": "frontend/tsconfig.spec.json",
             "karmaConfig": "frontend/karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": ["frontend/src/favicon.ico", "frontend/src/assets"],
-            "styles": ["frontend/src/styles.scss"],
+            "assets": [
+              "frontend/src/favicon.ico",
+              "frontend/src/assets"
+            ],
+            "styles": [
+              "frontend/src/styles.scss"
+            ],
             "scripts": []
           }
         }
