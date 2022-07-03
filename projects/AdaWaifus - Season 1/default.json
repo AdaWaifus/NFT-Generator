@@ -1,6 +1,6 @@
 {
   "name": "Default",
-  "amount": 1,
+  "amount": 50,
   "assets": {
     "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
     "outputSize": {
