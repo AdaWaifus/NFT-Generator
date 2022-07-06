@@ -7,6 +7,10 @@ import {NFTStorageUpload} from './NFTStorage';
 import {ImageGenerator} from './ImageGenerator';
 import {SchemaGenerator} from './SchemaGenerator';
 
+export type ImageSchemaMap = {
+  [imagePath: string]: string;
+};
+
 sharp.concurrency(1);
 
 const checkImageValidaity = async (images: string[]) => {
@@ -45,13 +49,14 @@ export class Generator {
     this.#nftStorageUpload = nftStorageUpload;
   }
 
-  async generate(indexOffset: number = 0, batchSize: number = sharp.concurrency()): Promise<void> {
+  async generate(indexOffset: number = 0, batchSize: number = sharp.concurrency()): Promise<ImageSchemaMap> {
     const {amount, assets, schema} = this.#config;
     const {outputPath: assetsOutputPath, images} = assets;
     const {outputPath: schemaOutputPath} = schema;
     const finalBatchSize = Math.min(amount, batchSize);
     const assetsOutputDir = dirname(assetsOutputPath);
     const schemaOutputDir = dirname(schemaOutputPath);
+    const imageSchemaMap: ImageSchemaMap = {};
 
     console.log(`Total images: ${amount}.`);
     console.log(`Image Output: ${assetsOutputDir}.`);
@@ -94,11 +99,14 @@ export class Generator {
 
           if (schemaOutput.path) {
             console.log(`Schema ${formattedImageNumber} done. ["${basename(schemaOutput.path)}"]`);
+            imageSchemaMap[path] = schemaOutput.path;
           }
         });
       });
 
       await Promise.all(promisesBatch);
     }
+
+    return imageSchemaMap;
   }
 }

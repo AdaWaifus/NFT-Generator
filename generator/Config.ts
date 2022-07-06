@@ -86,15 +86,18 @@ interface RawConfigFile {
 const defaultFileExtensions = ['png', 'jpg', 'jpeg'];
 const validateOutputPath = (outputPath: string, outputPathType: string) => {
   const isFile = !!extname(outputPath);
-  const dynamicFilename = insertStringVariables(outputPath, {index: 0}) !== outputPath;
+  const dynamicFilenameIndex = insertStringVariables(outputPath, {index: 0}) !== outputPath;
+  const dynamicFilenameTotalIndex = insertStringVariables(outputPath, {totalIndex: 0}) !== outputPath;
 
   if (!isFile) {
     throw new Error(
       `The ${outputPathType} output path has to be a path to a file instead of to a directory.`,
     );
   }
-  if (!dynamicFilename) {
-    throw new Error(`The ${outputPathType} output path has to have the {index} variable in the filename.`);
+  if (!dynamicFilenameIndex && !dynamicFilenameTotalIndex) {
+    throw new Error(
+      `The ${outputPathType} output path has to have the {index} or {totalIndex} variable in the filename.`,
+    );
   }
 };
 

@@ -2,19 +2,56 @@ import {basename} from 'path';
 import {CLI} from './CLI';
 import {Config} from './Config';
 import {NFTStorageUpload} from './NFTStorage';
-import {Generator} from './Generator';
+import {Generator, ImageSchemaMap} from './Generator';
 import {RarityCollector} from './RarityCollector';
 import {PreviewAnimation} from './PreviewAnimation';
 
-import {projectsGlob, nftStorageApiKey} from '../generator.json';
+import {projectsGlob, projectsSummary, nftStorageApiKey} from '../generator.json';
+import {ProjectsSummary} from './ProjectsSummary';
+
+export type ProjectCollectionSummary = {
+  [projectPath: string]: {
+    [configPath: string]: {
+      rarity: string;
+      assets: {
+        [imagePath: string]: string;
+      };
+    };
+  };
+};
+
+const addToProjectCollectionSummary = (
+  summary: ProjectCollectionSummary,
+  projectPath: string,
+  configPath: string,
+  insert: string | {[imagePath: string]: string},
+) => {
+  if (!summary[projectPath]) {
+    summary[projectPath] = {};
+  }
+  if (!summary[projectPath][configPath]) {
+    summary[projectPath][configPath] = {
+      rarity: '',
+      assets: {},
+    };
+  }
+
+  if (typeof insert === 'string') {
+    summary[projectPath][configPath].rarity = insert;
+  } else {
+    summary[projectPath][configPath].assets = insert;
+  }
+};
 
 const main = async () => {
   const cliAnswers = await CLI(projectsGlob);
   const isBuild = cliAnswers['action'] === 'build';
   const isRarityCollection = cliAnswers['action'] === 'collect rarity';
   const isPreviewAnimation = cliAnswers['action'] === 'preview animation';
+  const projectPath = cliAnswers['projectPath'];
   const configPaths = (cliAnswers['configPaths'] || []) as string[];
   const configs = configPaths.map(configPath => new Config(configPath));
+  const projectCollectionSummary: ProjectCollectionSummary = {};
 
   if (isBuild) {
     const batchSize = cliAnswers['batchSize'] || undefined;
@@ -29,9 +66,11 @@ const main = async () => {
       console.log(`===========================================`);
 
       const generator = new Generator(config, nftStorageUpload);
-      await generator.generate(sharedIndex, batchSize);
+      const imageSchemaMap = await generator.generate(sharedIndex, batchSize);
 
       sharedIndex += config.amount;
+
+      addToProjectCollectionSummary(projectCollectionSummary, projectPath, configPath, imageSchemaMap);
     }
   }
   if (isRarityCollection || isBuild) {
@@ -43,9 +82,15 @@ const main = async () => {
       console.log(`===========================================`);
 
       const collector = new RarityCollector(config);
-      await collector.collect();
+      const rarityCollectionPath = await collector.collect();
+
+      addToProjectCollectionSummary(projectCollectionSummary, projectPath, configPath, rarityCollectionPath);
     }
   }
+
+  const summary = new ProjectsSummary(projectsGlob, projectsSummary);
+  summary.generate(projectCollectionSummary);
+
   if (isPreviewAnimation || isBuild) {
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];

@@ -58,14 +58,15 @@ export class PreviewAnimation {
 
     const {quantity, sampleSize, animation, outputPath: previewAnimationOutputPath} = previewAnimation;
 
-    if (!width || !height) {
-      throw new Error(
-        `The canvas size could not be determined. Please specify the "previewAnimtion.outputSize" option.`,
-      );
+    if (!previewAnimationOutputPath) {
+      console.log(`Skipping preview animation: The "previewAnimation.outputPath" has to be specified.`);
+      return;
     }
 
-    if (!previewAnimationOutputPath) {
-      throw new Error(`The "previewAnimtion.outputPath" has to be specified.`);
+    if (!width || !height) {
+      throw new Error(
+        `The canvas size could not be determined. Please specify the "previewAnimation.outputSize" option.`,
+      );
     }
 
     fs.mkdirSync(dirname(previewAnimationOutputPath), {recursive: true});

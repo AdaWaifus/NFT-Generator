@@ -1,6 +1,6 @@
 {
   "name": "Tier 1 - Zombie",
-  "amount": 300,
+  "amount": 1,
   "assets": {
     "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
     "outputSize": {

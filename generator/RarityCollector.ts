@@ -16,7 +16,7 @@ export class RarityCollector {
     this.#config = config;
   }
 
-  async collect(): Promise<void> {
+  async collect(): Promise<string> {
     const {amount, assets, schema, rarityCollection} = this.#config;
     const {outputPath: schemaOutputPath, attributesKey} = schema;
     const {images, order} = assets;
@@ -63,10 +63,12 @@ export class RarityCollector {
         });
       });
 
-      await writeFile(outputPath, JSON.stringify(result, null, 2));
       console.log(`Rarity collected in: ${outputPath}`);
+      await writeFile(outputPath, JSON.stringify(result, null, 2));
+      return outputPath;
     } else {
       console.log(`Nothing to collect.`);
+      return '';
     }
   }
 }
