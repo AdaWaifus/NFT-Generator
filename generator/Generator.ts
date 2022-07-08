@@ -1,8 +1,9 @@
 import sharp from 'sharp';
-import {basename, dirname} from 'path';
+import {basename, dirname, relative} from 'path';
 import {mkdir, rm} from 'fs/promises';
 import {getType} from 'mime';
 import {Config} from './Config';
+import {normalizePath} from './utils';
 import {NFTStorageUpload} from './NFTStorage';
 import {ImageGenerator} from './ImageGenerator';
 import {SchemaGenerator} from './SchemaGenerator';
@@ -99,7 +100,9 @@ export class Generator {
 
           if (schemaOutput.path) {
             console.log(`Schema ${formattedImageNumber} done. ["${basename(schemaOutput.path)}"]`);
-            imageSchemaMap[path] = schemaOutput.path;
+            imageSchemaMap[normalizePath(relative(process.cwd(), path))] = normalizePath(
+              relative(process.cwd(), schemaOutput.path),
+            );
           }
         });
       });
