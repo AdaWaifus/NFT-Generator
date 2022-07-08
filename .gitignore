@@ -1,8 +1,9 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-#assets.json
-/projects/assets.json
+#Generator
+/projects/summary.json
 /frontend/generate-asset-files.js
+
 # Compiled output
 /dist
 
