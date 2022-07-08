@@ -5,7 +5,7 @@ This is a tool for creating, evaluating and uploading nft images.
 ## Usage
 
 - `npm install`
-- `npm start`
+- `npm start-generator`
 
 ## Configuration
 

@@ -14,8 +14,6 @@ export class NFTStorageUpload {
     const content = await readFile(filepath);
     const type = getType(filepath);
 
-    return await this.#client.storeBlob(
-      new File([content], basename(filepath), {type: type || undefined}),
-    );
+    return await this.#client.storeBlob(new File([content], basename(filepath), {type: type || undefined}));
   }
 }

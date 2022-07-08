@@ -74,11 +74,11 @@ export class ImageGenerator {
         const hasChooseRestrictions = !ignoreLayer && currChooseRestrictions.length > 0;
 
         const allImages = images.filter(imagePath => normalizePath(dirname(imagePath)) === imagesDirectory);
-        const choosedImages = useGlob(
+        const selectedImages = useGlob(
           currChooseRestrictions.filter(chooseValue => !!chooseValue) as string[],
         );
         const pickedImage = `${ignoreLayer ? restrictionRemovedLayerPrefix : ''}${pickImage(
-          hasChooseRestrictions ? choosedImages : allImages,
+          hasChooseRestrictions ? selectedImages : allImages,
         )}`;
 
         const appliedRestriction =

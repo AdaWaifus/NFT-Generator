@@ -1,5 +1,5 @@
 {
   "projectsGlob": "./projects/*",
   "projectsSummary": "./projects/summary.json",
-  "nftStorageApiKey": "Add here your API key from https://nft.storage for the auto upload of NFTs to the IPFS"
+  "nftStorageApiKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweERhNjQ2RTY5MWFBMDY4MTllYjVjMTdmNjdEODUxNUNEZTNiYWI4YjUiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NzE3OTg1NjMwNiwibmFtZSI6IkFkYVdhaWZ1cyJ9.fvJ3kK_JxEe0rjt4T-wr16YtYIvA2oOGg5F4Jrlk-Fw"
 }
