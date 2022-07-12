@@ -1,48 +1,74 @@
 <div class="content">
-  <aside>
-    <h2 class="no-margin typo-h4">Filter</h2>
-    <hr>
-    <div class="search" (click)="search.focus()">
-      <input #search type="number" placeholder="Search for number..." (input)="onSearchChange($event)">
-      <button (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1"
-        *ngIf="search.value; else spacer">
-        <mat-icon svgIcon="close"></mat-icon>
-      </button>
+  <div *ngIf="projects | async as _projects">
+    <div>
+      <h2>Select your project</h2>
     </div>
-    <app-gallery-filter [attributes]="(filters | async)!" (filterChange)="filterChange($event)"></app-gallery-filter>
-  </aside>
-
-  <main>
-    <div class="display-flex">
-      <h2 class="no-margin typo-h4">Gallery</h2>
-      <div style="flex: 1 1 auto;"></div>
+    <div *ngFor="let p of _projects" (click)="selectProject(p)">
+      <pre>{{p}}</pre>
     </div>
 
-    <hr>
 
-    <ng-container *ngIf="collection | async as col">
-      <ng-container *ngIf="col.length > 0; else empty">
-        <div class="images">
-          <button mat-flat-button *ngFor="let item of col;trackBy: trackById; let index = index"
-            (click)="openDetailDialog(item)">
-            <img [src]="item" alt="">
-            <div class="image-footer display-flex flex-column">
-              <span class="typo-small font-weight-800 text-align-center">{{ item.name | slice: 10 }}</span>
-            </div>
-          </button>
-        </div>
+  </div>
+  <div></div>
+
+  <div *ngIf="collections | async as _collections">
+    <div>
+      <h2>Select your collection</h2>
+    </div>
+    <div *ngFor="let c of _collections" (click)="selectCollection(c)">
+      <pre>{{c}}</pre>
+    </div>
+
+
+  </div>
+  <div></div>
+  <ng-container *ngIf="assets | async as _assets">
+    <aside>
+      <h2 class="no-margin typo-h4">Filter</h2>
+      <hr>
+      <div class="search" (click)="search.focus()">
+        <input #search type="number" placeholder="Search for number..." (input)="onSearchChange($event)">
+        <button (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1"
+          *ngIf="search.value; else spacer">
+          <mat-icon svgIcon="close"></mat-icon>
+        </button>
+      </div>
+      <app-gallery-filter [attributes]="(filters | async)!" (filterChange)="filterChange($event)"></app-gallery-filter>
+    </aside>
+
+    <main>
+      <div class="display-flex">
+        <h2 class="no-margin typo-h4">Gallery</h2>
+        <div style="flex: 1 1 auto;"></div>
+      </div>
+
+      <hr>
+
+      <ng-container *ngIf="assets | async as col">
+        <ng-container *ngIf="(col.assets | toObjectKeys).length > 0; else empty">
+          <div class="images">
+            <button mat-flat-button *ngFor="let item of col.assets | toObjectKeys; let index = index"
+              (click)="openDetailDialog(item)">
+              <img [src]="item | urlEncode" alt="">
+              <div class="image-footer display-flex flex-column">
+                <span class="typo-small font-weight-800 text-align-center">{{ item | slice: 10 }}</span>
+              </div>
+            </button>
+          </div>
+        </ng-container>
+
+        <ng-template #empty>
+          <div class="images-404">
+            {{ 'gallery.no_match' }}
+          </div>
+        </ng-template>
       </ng-container>
 
-      <ng-template #empty>
-        <div class="images-404">
-          {{ 'gallery.no_match' }}
-        </div>
-      </ng-template>
-    </ng-container>
+      <div intersectionObserver (visible)="onVisible($event)"> </div>
 
-    <div intersectionObserver (visible)="onVisible($event)"> </div>
+    </main>
+  </ng-container>
 
-  </main>
 </div>
 
 <ng-template #spacer>

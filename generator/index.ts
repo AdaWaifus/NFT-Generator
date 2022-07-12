@@ -1,13 +1,14 @@
-import {basename} from 'path';
-import {CLI} from './CLI';
-import {Config} from './Config';
-import {NFTStorageUpload} from './NFTStorage';
-import {Generator, ImageSchemaMap} from './Generator';
-import {RarityCollector} from './RarityCollector';
-import {PreviewAnimation} from './PreviewAnimation';
+import { basename } from 'path';
+import { CLI } from './CLI';
+import { Config } from './Config';
+import { NFTStorageUpload } from './NFTStorage';
+import { Generator, ImageSchemaMap } from './Generator';
+import { RarityCollector } from './RarityCollector';
+import { PreviewAnimation } from './PreviewAnimation';
 
-import {projectsGlob, projectsSummary, nftStorageApiKey} from '../generator.json';
-import {ProjectsSummary} from './ProjectsSummary';
+import { projectsGlob, projectsSummary, nftStorageApiKey } from '../generator.json';
+import { ProjectsSummary } from './ProjectsSummary';
+import { mapToRelativePath } from './utils';
 
 export type ProjectCollectionSummary = {
   [projectPath: string]: {
@@ -24,22 +25,24 @@ const addToProjectCollectionSummary = (
   summary: ProjectCollectionSummary,
   projectPath: string,
   configPath: string,
-  insert: string | {[imagePath: string]: string},
+  insert: string | { [imagePath: string]: string },
 ) => {
-  if (!summary[projectPath]) {
-    summary[projectPath] = {};
+  const _projectPath = mapToRelativePath(projectPath);
+  const _configPath = mapToRelativePath(configPath);
+  if (!summary[_projectPath]) {
+    summary[_projectPath] = {};
   }
-  if (!summary[projectPath][configPath]) {
-    summary[projectPath][configPath] = {
+  if (!summary[_projectPath][_configPath]) {
+    summary[_projectPath][_configPath] = {
       rarity: '',
       assets: {},
     };
   }
 
   if (typeof insert === 'string') {
-    summary[projectPath][configPath].rarity = insert;
+    summary[_projectPath][_configPath].rarity = mapToRelativePath(insert);
   } else {
-    summary[projectPath][configPath].assets = insert;
+    summary[_projectPath][_configPath].assets = insert;
   }
 };
 
@@ -89,20 +92,20 @@ const main = async () => {
   }
 
   const summary = new ProjectsSummary(projectsGlob, projectsSummary);
-  summary.generate(projectCollectionSummary);
-
-  if (isPreviewAnimation || isBuild) {
-    for (let i = 0; i < configs.length; i++) {
-      const config = configs[i];
-      const configPath = configPaths[i];
-      console.log(`===========================================`);
-      console.log(`Preview Animation ${basename(configPath)}:`);
-      console.log(`===========================================`);
-
-      const previewAnimation = new PreviewAnimation(config);
-      await previewAnimation.generate();
-    }
-  }
+  await summary.generate(projectCollectionSummary);
+  /*
+    if (isPreviewAnimation || isBuild) {
+      for (let i = 0; i < configs.length; i++) {
+        const config = configs[i];
+        const configPath = configPaths[i];
+        console.log(`===========================================`);
+        console.log(`Preview Animation ${basename(configPath)}:`);
+        console.log(`===========================================`);
+  
+        const previewAnimation = new PreviewAnimation(config);
+        await previewAnimation.generate();
+      }
+    }*/
 };
 
 main();

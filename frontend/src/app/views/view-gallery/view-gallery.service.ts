@@ -1,10 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime } from 'rxjs';
+import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime, shareReplay } from 'rxjs';
 import { AttributeFilter, IAttributesFromServer, ICurrentFilter, ServerCollection } from './view-gallery.models';
 import { CurrentFilter } from "./view-gallery.classes";
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'frontend/src/environments/environment';
 import { filterCollection, mapCollectionFromServer, mapAttributesFromServer } from '../../app.helper';
+export interface Summary {
+  [key: string]: SummaryProject;
+}
+export interface SummaryProject {
+  [key: string]: SummarySeason;
+}
+export interface SummarySeason {
+  rarity: string;
+  assets: { [key: string]: string };
+}
 
 @Injectable({
   providedIn: 'any',
@@ -13,14 +23,23 @@ export class ViewGalleryService {
   private slice = 0;
   private _currentFilter = new BehaviorSubject<ICurrentFilter | null>(null);
   private _loadMore = new Subject<boolean>();
-  private httpData = this.httpClient.get<any>('projects/assets.json').pipe(map(a => a.assetFiles));
+  private httpData = this.httpClient.get<Summary>('projects/summary.json').pipe(shareReplay());
   constructor(private httpClient: HttpClient) { }
 
-  get projects() {
+  getAssets(project: string, collection: string) {
+    return this.httpData.pipe((map(d => {
+      return d[project][collection];
+    })))
+  }
 
-    return combineLatest(([this.loadMore.pipe(debounceTime(50)), this.httpData])).pipe((map(([l, d]) => {
-      console.log(l);
-      return d.slice(0, l);;
+  getCollections(project: string) {
+    return this.httpData.pipe((map(d => {
+      return Object.keys(d[project]);
+    })))
+  }
+  get projects() {
+    return this.httpData.pipe((map(d => {
+      return Object.keys(d);
     })))
   }
 

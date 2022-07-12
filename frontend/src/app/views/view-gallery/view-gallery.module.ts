@@ -9,6 +9,8 @@ import { FilterPipe } from '../../pipes/filter.pipe';
 import { GalleryDetailDialogComponent } from './gallery-detail-dialog/gallery-detail-dialog.component';
 import { IntersectionObserverDirective } from '../../directives/intersection-observer.directive';
 import { HttpClientModule } from '@angular/common/http';
+import { ToObjectKeys } from '../../pipes/toObjectKeys.pipe';
+import { UrlEncodedPipe } from '../../pipes/url-encoded';
 
 @NgModule({
   declarations: [
@@ -17,6 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
     GalleryFilterVariantsComponent,
     GalleryDetailDialogComponent,
     FilterPipe,
+    ToObjectKeys,
+    UrlEncodedPipe,
     IntersectionObserverDirective,
   ],
   imports: [CommonModule, ViewGalleryRoutingModule, MatModule, HttpClientModule],

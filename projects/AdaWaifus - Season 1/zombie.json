@@ -1,6 +1,6 @@
 {
   "name": "Tier 1 - Zombie",
-  "amount": 1,
+  "amount": 10,
   "assets": {
     "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
     "outputSize": {
@@ -8,7 +8,16 @@
       "height": 1000
     },
     "inputPath": "./Input/{name}",
-    "order": ["Background", "Skin", "Mouth", "Hairstyle", "Clothing", "Eyes", "Ears", "Accessory"]
+    "order": [
+      "Background",
+      "Skin",
+      "Mouth",
+      "Hairstyle",
+      "Clothing",
+      "Eyes",
+      "Ears",
+      "Accessory"
+    ]
   },
   "schema": {
     "outputPath": "./Output/{name}/schema/schema {index +1} of {amount} - #{totalIndex}.json",
@@ -22,7 +31,10 @@
       "homepage": "https://adawaifus.io",
       "assetType": "NFT",
       "mediaType": "image/png",
-      "image": ["ipfs://", "{cid}"],
+      "image": [
+        "ipfs://",
+        "{cid}"
+      ],
       "attributes": {
         "collection": "Season 1",
         "type": "{name}"

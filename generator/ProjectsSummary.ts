@@ -1,8 +1,8 @@
-import {join} from 'path';
+import path, { join } from 'path';
 import fs from 'fs';
 import fg from 'fast-glob';
-import {normalizePath} from './utils';
-import type {ProjectCollectionSummary} from './';
+import { mapArrayToRelativePath, mapToRelativePath, normalizePath } from './utils';
+import type { ProjectCollectionSummary } from './';
 
 export class ProjectsSummary {
   #projectCollectionSummaryTemplate: ProjectCollectionSummary;
@@ -10,11 +10,11 @@ export class ProjectsSummary {
   #projectsSummary: string;
 
   constructor(projectsGlob: string, projectsSummary: string) {
-    const summaryFile = fg.sync(projectsSummary, {onlyFiles: true, absolute: true});
-    const projects = fg.sync(projectsGlob, {onlyDirectories: true, absolute: true});
+    const summaryFile = fg.sync(projectsSummary, { onlyFiles: true, absolute: true });
+    const projects = mapArrayToRelativePath(fg.sync(projectsGlob, { onlyDirectories: true, absolute: true }));
     this.#projectsSummary = projectsSummary;
     this.#projectCollectionSummaryTemplate = projects.reduce((projectsObj, project) => {
-      const collections = fg.sync(normalizePath(join(project, '/*')), {onlyFiles: true, absolute: true});
+      const collections = mapArrayToRelativePath(fg.sync(normalizePath(join(project, '/*')), { onlyFiles: true, absolute: true }));
       projectsObj[project] = collections.reduce((collectionsObj, collection) => {
         collectionsObj[collection] = {
           rarity: '',
@@ -34,10 +34,12 @@ export class ProjectsSummary {
       absolute: true,
     })[0]);
   }
-
   async generate(projectCollectionSummary: ProjectCollectionSummary) {
     const result = this.#projectCollectionSummaryImport;
-    const projects = Object.keys(projectCollectionSummary);
+    const projects = mapArrayToRelativePath(Object.keys(projectCollectionSummary))
+    console.log('result', result);
+    console.log('projectCollectionSummary', projectCollectionSummary);
+
     projects.forEach(project => {
       const projectInTemplate = Object.keys(this.#projectCollectionSummaryTemplate).includes(project);
 
@@ -50,8 +52,8 @@ export class ProjectsSummary {
           );
 
           if (collectionInTemplate) {
-            const {rarity, assets} = result[project][projectCollection];
-            const {rarity: newRarity, assets: newAssets} = projectsObj[projectCollection];
+            const { rarity, assets } = result[project][projectCollection];
+            const { rarity: newRarity, assets: newAssets } = projectsObj[projectCollection];
             const newAssetsEmpty = Object.keys(newAssets).length === 0;
             result[project][projectCollection] = {
               rarity: newRarity || rarity,

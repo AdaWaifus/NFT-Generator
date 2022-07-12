@@ -1,6 +1,6 @@
 {
   "name": "Default",
-  "amount": 1,
+  "amount": 10,
   "assets": {
     "outputPath": "./Output/{name}/image/image {index +1} of {amount} - #{totalIndex}.png",
     "outputSize": {
@@ -8,11 +8,22 @@
       "height": 1000
     },
     "inputPath": "./Input/{name}",
-    "order": ["Background", "Skin", "Mouth", "Hairstyle", "Clothing", "Eyes", "Ears", "Accessory"],
+    "order": [
+      "Background",
+      "Skin",
+      "Mouth",
+      "Hairstyle",
+      "Clothing",
+      "Eyes",
+      "Ears",
+      "Accessory"
+    ],
     "restrictions": {
       "Background": [
         {
-          "matches": ["*"],
+          "matches": [
+            "*"
+          ],
           "choose": {
             "Clothing": null
           }
@@ -20,17 +31,25 @@
       ],
       "Ears": [
         {
-          "matches": ["Wolf Kivi*"],
+          "matches": [
+            "Wolf Kivi*"
+          ],
           "choose": {
-            "Hairstyle": ["Piggy Kivi*"]
+            "Hairstyle": [
+              "Piggy Kivi*"
+            ]
           }
         }
       ],
       "Hairstyle": [
         {
-          "matches": ["Piggy Kivi*"],
+          "matches": [
+            "Piggy Kivi*"
+          ],
           "choose": {
-            "Ears": ["Wolf Kivi*"]
+            "Ears": [
+              "Wolf Kivi*"
+            ]
           }
         }
       ]
@@ -49,7 +68,10 @@
       "homepage": "https://adawaifus.io",
       "assetType": "NFT",
       "mediaType": "{mediaType}",
-      "image": ["ipfs://", "{cid}"],
+      "image": [
+        "ipfs://",
+        "{cid}"
+      ],
       "attributes": {
         "collection": "Season 1",
         "type": "{name}"

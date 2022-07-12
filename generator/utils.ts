@@ -1,4 +1,4 @@
-import {basename, dirname} from 'path';
+import path, { basename, dirname } from 'path';
 
 const rarityDelimiter = '#';
 const escapeRegExp = (str: string): string => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -12,6 +12,8 @@ export const splitAttributeAndRarity = (imagePath: string, fallbackRarity: numbe
 
   return [nameWithoutExtension, isNaN(rarityNumber) ? fallbackRarity : rarityNumber];
 };
+export const mapArrayToRelativePath = (arr: string[]) => arr.map(a => mapToRelativePath(a));
+export const mapToRelativePath = (p: string) => path.relative(process.cwd(), p);
 
 export const getAttributeKeyValuePairs = (
   order: string[],
@@ -64,7 +66,7 @@ export const insertStringVariables = (str: string, variables: Record<string, unk
         let replacement = keyMatch;
         try {
           replacement = String(eval(`${evalVariablesStr}${keyMatch};`));
-        } catch (e) {}
+        } catch (e) { }
 
         return replacedKeyMatchStr.replace(new RegExp(escapeRegExp(keyMatch), 'g'), replacement);
       }, replacedStr);
@@ -104,5 +106,5 @@ export const insertStringVariablesIntoValues = <T = Record<string, unknown>>(
 
       return resultObj;
     },
-    {...obj} as Record<string, unknown>,
+    { ...obj } as Record<string, unknown>,
   ) as T;

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AttributeFilter, IAttributes } from './view-gallery.models';
 import { Collection } from "./view-gallery.classes";
 import { combineLatest, debounceTime, map, Observable } from "rxjs";
-import { ViewGalleryService } from "./view-gallery.service";
+import { SummarySeason, ViewGalleryService } from "./view-gallery.service";
 import { MatDialog } from "@angular/material/dialog";
 import { GalleryDetailDialogComponent } from "./gallery-detail-dialog/gallery-detail-dialog.component";
 import { HttpClient } from '@angular/common/http';
@@ -13,12 +13,14 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./view-gallery.component.scss'],
 })
 export class ViewGalleryComponent {
-  public collection?: Observable<Collection[] | undefined>;
+  public collections?: Observable<string[]>;
+  public assets?: Observable<SummarySeason>;
+  public projects?: Observable<string[]>;
   public filters?: Observable<IAttributes[]>;
+  private selectedProject: string = '';
 
   constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
-
-    this.collection = viewGalleryService.projects;
+    this.projects = viewGalleryService.projects;
   }
 
   filterChange(filter: AttributeFilter) {
@@ -45,5 +47,12 @@ export class ViewGalleryComponent {
   }
   onVisible(event: any) {
     if (event === true) this.viewGalleryService.loadNext();
+  }
+  selectProject(project: string) {
+    this.selectedProject = project;
+    this.collections = this.viewGalleryService.getCollections(project);
+  }
+  selectCollection(collection: string) {
+    this.assets = this.viewGalleryService.getAssets(this.selectedProject, collection);
   }
 }
