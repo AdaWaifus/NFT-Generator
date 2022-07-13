@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime, shareReplay } from 'rxjs';
-import { AttributeFilter, IAttributesFromServer, ICurrentFilter, ServerCollection } from './view-gallery.models';
+import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime, shareReplay, observable } from 'rxjs';
+import { AttributeFilter, IAttributes, IAttributesFromServer, ICurrentFilter, IVariant, ServerCollection } from './view-gallery.models';
 import { CurrentFilter } from "./view-gallery.classes";
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'frontend/src/environments/environment';
@@ -42,6 +42,47 @@ export class ViewGalleryService {
       return Object.keys(d);
     })))
   }
+
+  get filters() {
+    return this.httpData.pipe(map(summary => {
+      const keys = Object.keys(summary);
+
+      const result: IAttributes[] = [{
+        title: 'projects',
+        totalFilters: keys.length,
+        variants: keys.map(p => {
+          const v: IVariant = {
+            name: p,
+            count: Object.keys(summary[p]).reduce<number>((prev, current) => {
+              prev += Object.keys(summary[p][current].assets).length;
+              return prev
+            }, 0)
+          };
+          return v;
+        })
+      },
+      {
+        title: 'collections',
+        totalFilters: keys.reduce<number>((prev, p) => {
+          prev += Object.keys(summary[p]).length;
+          return prev;
+        }, 0),
+        variants: keys.reduce<Array<IVariant>>((prev, p) => {
+          prev.push(...Object.keys(summary[p]).map(col => {
+            const v: IVariant = {
+              name: col,
+              count: Object.keys(summary[p][col].assets).length
+            }
+            return v;
+          }));
+          return prev;
+        }, [])
+      }];
+      return result;
+    }))
+  }
+
+
 
   get filter() {
     return this._currentFilter.asObservable();

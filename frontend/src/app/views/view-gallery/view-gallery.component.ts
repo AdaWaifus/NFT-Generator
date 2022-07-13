@@ -21,6 +21,7 @@ export class ViewGalleryComponent {
 
   constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
     this.projects = viewGalleryService.projects;
+    this.filters = viewGalleryService.filters;
   }
 
   filterChange(filter: AttributeFilter) {
