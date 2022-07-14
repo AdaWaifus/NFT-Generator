@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime, shareReplay, observable } from 'rxjs';
+import { BehaviorSubject, EMPTY, map, of, Subject, switchMap, combineLatest, debounceTime, shareReplay, observable, combineLatestAll, forkJoin, mergeAll, mergeMap, concatAll, zip, zipAll } from 'rxjs';
 import { AttributeFilter, IAttributes, IAttributesFromServer, ICurrentFilter, IVariant, ServerCollection } from './view-gallery.models';
 import { CurrentFilter } from "./view-gallery.classes";
 import { HttpClient } from '@angular/common/http';
@@ -26,10 +26,42 @@ export class ViewGalleryService {
   private httpData = this.httpClient.get<Summary>('projects/summary.json').pipe(shareReplay());
   constructor(private httpClient: HttpClient) { }
 
-  getAssets(project: string, collection: string) {
-    return this.httpData.pipe((map(d => {
-      return d[project][collection];
-    })))
+  getAssets() {
+    const assets = this.httpData;
+
+    return combineLatest([this._currentFilter.asObservable(), assets]).pipe(map(([filter, assets]) => {
+      console.log(filter);
+      const result: any = { assets: {} };
+      const keys = Object.keys(assets);
+      for (const key of keys) {
+        if (filter && filter.filterByAttributes && filter.filterByAttributes['Projects']) {
+          const projectFilterKeys = Object.keys(filter.filterByAttributes['Projects']);
+          if (projectFilterKeys.length > 0 && projectFilterKeys.indexOf(key) === -1)
+            continue;
+
+        }
+
+
+        const collectionKeys = Object.keys(assets[key]);
+        for (const collectionKey of collectionKeys) {
+
+          if (filter && filter.filterByAttributes && filter.filterByAttributes['Collections']) {
+            const collectionFilterKeys = Object.keys(filter.filterByAttributes!['Collections']);
+            if (collectionFilterKeys.length > 0 && collectionFilterKeys.indexOf(collectionKey) === -1)
+              continue;
+
+          }
+
+          const assetsKeys = Object.keys(assets[key][collectionKey].assets);
+          for (const assetsKey of assetsKeys) {
+            result.assets[assetsKey] = assets[key][collectionKey].assets[assetsKey];
+          }
+        }
+      }
+      // if (filter)
+      // this.filterByAttributes(result, filter);
+      return result;
+    }));
   }
 
   getCollections(project: string) {
@@ -44,12 +76,53 @@ export class ViewGalleryService {
   }
 
   get filters() {
-    return this.httpData.pipe(map(summary => {
+
+    const rarity = this.httpData.pipe(
+      mergeMap(summary => {
+        const result = [];
+        const keys = Object.keys(summary);
+        for (const key of keys) {
+          const collectionKeys = Object.keys(summary[key]);
+          for (const collectionKey of collectionKeys) {
+            result.push(this.httpClient.get<any>(summary[key][collectionKey].rarity))
+          }
+        }
+        return combineLatest(result).pipe(map((a) => a.reduce((prev, current) => {
+          const keys = Object.keys(current);
+          for (const key of keys) {
+            if (!!!prev[key]) prev[key] = [];
+            prev[key].push(...current[key]);
+          }
+          return prev;
+        }, {})),
+          map(a => {
+            const result: IAttributes[] = [];
+            const keys = Object.keys(a);
+            for (const key of keys) {
+              const attr = a[key];
+              result.push({
+                title: key,
+                totalFilters: 0,
+                variants: attr.map((aa: any) => {
+                  return {
+                    name: aa.attributeValue,
+                    count: aa.count
+                  }
+                })
+              })
+            }
+            return result;
+          })
+        );
+      }),
+    );
+
+    const projectAndCollection = this.httpData.pipe(map(summary => {
       const keys = Object.keys(summary);
 
       const result: IAttributes[] = [{
         title: 'projects',
-        totalFilters: keys.length,
+        totalFilters: 0,
         variants: keys.map(p => {
           const v: IVariant = {
             name: p,
@@ -63,10 +136,7 @@ export class ViewGalleryService {
       },
       {
         title: 'collections',
-        totalFilters: keys.reduce<number>((prev, p) => {
-          prev += Object.keys(summary[p]).length;
-          return prev;
-        }, 0),
+        totalFilters: 0,
         variants: keys.reduce<Array<IVariant>>((prev, p) => {
           prev.push(...Object.keys(summary[p]).map(col => {
             const v: IVariant = {
@@ -80,6 +150,13 @@ export class ViewGalleryService {
       }];
       return result;
     }))
+
+    return combineLatest([rarity, projectAndCollection]).pipe(map(([r, pc]) => {
+      const result = [];
+      result.push(...pc, ...r);
+      return result;
+    }))
+
   }
 
 
@@ -147,5 +224,36 @@ export class ViewGalleryService {
 
   loadNext() {
     this._loadMore.next(true);
+  }
+
+  // this code will filter by attributes
+  // could be improvded oneday
+  filterByAttributes(collection: any[], filter: ICurrentFilter) {
+    if (!filter) return collection;
+    if (!filter.filterByAttributes) return collection;
+
+    return collection.filter((d: any) => {
+      const filters = filter.filterByAttributes!;
+      if (Object.keys(filters).length === 0) return true;
+      const attributeNames = Object.keys(filters);
+      let totalAttributes = 0;
+      let matchedAttribute = 0;
+      for (const attribute of attributeNames) {
+        const variantNames = Object.keys(filters[attribute]);
+        if (variantNames.length > 0) totalAttributes++;
+        for (const variantName of variantNames) {
+          if (
+            d.attributes[attribute] === variantName &&
+            filters[attribute][variantName]
+          ) {
+            matchedAttribute++;
+
+            break;
+          }
+          continue;
+        }
+      }
+      return totalAttributes === matchedAttribute;
+    });
   }
 }

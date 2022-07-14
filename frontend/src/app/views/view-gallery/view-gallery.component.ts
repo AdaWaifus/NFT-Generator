@@ -20,8 +20,9 @@ export class ViewGalleryComponent {
   private selectedProject: string = '';
 
   constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
-    this.projects = viewGalleryService.projects;
     this.filters = viewGalleryService.filters;
+    this.assets = this.viewGalleryService.getAssets();
+
   }
 
   filterChange(filter: AttributeFilter) {
@@ -54,6 +55,5 @@ export class ViewGalleryComponent {
     this.collections = this.viewGalleryService.getCollections(project);
   }
   selectCollection(collection: string) {
-    this.assets = this.viewGalleryService.getAssets(this.selectedProject, collection);
   }
 }
