@@ -47,11 +47,17 @@ export class ProjectsSummary {
         const projectsObj = projectCollectionSummary[project];
         const projectCollections = Object.keys(projectsObj);
         projectCollections.forEach(projectCollection => {
+          console.log('this#', this.#projectCollectionSummaryTemplate);
+          console.log('thisresult', result);
           const collectionInTemplate = Object.keys(this.#projectCollectionSummaryTemplate[project]).includes(
-            projectCollection,
+            projectCollection
           );
 
           if (collectionInTemplate) {
+            if (!!!result[project])
+              result[project] = {};
+            if (!!!result[project][projectCollection])
+              result[project][projectCollection] = { rarity: '', assets: {} };
             const { rarity, assets } = result[project][projectCollection];
             const { rarity: newRarity, assets: newAssets } = projectsObj[projectCollection];
             const newAssetsEmpty = Object.keys(newAssets).length === 0;
