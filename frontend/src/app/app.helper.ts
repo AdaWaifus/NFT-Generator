@@ -1,6 +1,10 @@
-import { map } from 'rxjs/operators';
-import {IAttributesFromServer, ICurrentFilter, ServerCollection} from "./views/view-gallery/view-gallery.models";
-import {Attributes, Collection, Variant} from "./views/view-gallery/view-gallery.classes";
+import {map} from 'rxjs/operators';
+import {
+  IAttributesFromServer,
+  ICurrentFilter,
+  ServerCollection,
+} from './views/view-gallery/view-gallery.models';
+import {Attributes, Collection, Variant} from './views/view-gallery/view-gallery.classes';
 
 // Mapping server data to front interfaces
 export const mapAttributesFromServer = map((d: IAttributesFromServer) => {
@@ -9,30 +13,24 @@ export const mapAttributesFromServer = map((d: IAttributesFromServer) => {
   for (const key of keys) {
     const attribute = new Attributes(
       key,
-      d[key].map((d) => new Variant(d.variant, d.count))
+      d[key].map(d => new Variant(d.variant, d.count)),
     );
     result.push(attribute);
   }
   return result;
 });
 
-export const mapCollectionFromServer = map((data: ServerCollection[]) =>
-  data.map((d) => new Collection(d))
-);
+export const mapCollectionFromServer = map((data: ServerCollection[]) => data.map(d => new Collection(d)));
 
 export const filterCollection = map(
-  ([collection, filter, slice = 20]: [
-    Collection[],
-    ICurrentFilter | null,
-    number
-  ]) => {
-    //if no filter return the collection
+  ([collection, filter, slice = 20]: [Collection[], ICurrentFilter | null, number]) => {
+    // if no filter return the collection
     if (!filter) return collection.slice(0, slice);
     collection = filterByAttributes(collection, filter);
     collection = filterByNumber(collection, filter);
 
     return collection.slice(0, slice);
-  }
+  },
 );
 
 function filterByNumber(collection: Collection[], filter: ICurrentFilter) {
@@ -60,12 +58,8 @@ function filterByAttributes(collection: Collection[], filter: ICurrentFilter) {
       const variantNames = Object.keys(filters[attribute]);
       if (variantNames.length > 0) totalAttributes++;
       for (const variantName of variantNames) {
-        if (
-          d.attributes[attribute] === variantName &&
-          filters[attribute][variantName]
-        ) {
+        if (d.attributes[attribute] === variantName && filters[attribute][variantName]) {
           matchedAttribute++;
-
           break;
         }
         continue;

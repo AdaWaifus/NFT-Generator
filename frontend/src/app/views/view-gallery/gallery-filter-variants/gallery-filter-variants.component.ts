@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {AttributeFilter, IVariant} from "../view-gallery.models";
-import {removeItemFromList} from "../../../app.utilities";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {AttributeFilter, IVariant} from '../view-gallery.models';
+import {removeItemFromList} from '../../../app.utilities';
 
 @Component({
   selector: 'app-gallery-filter-variants',
@@ -19,7 +19,7 @@ export class GalleryFilterVariantsComponent {
     if (!value) {
       removeItemFromList(this.selectedValues, variant);
     }
-    this.filterChange.emit({ attributeName: '', value, variant });
+    this.filterChange.emit({attributeName: '', value, variant});
     this.totalFiltersChange.emit(this.selectedValues.length);
   }
   onSearchChange(event: Event) {
