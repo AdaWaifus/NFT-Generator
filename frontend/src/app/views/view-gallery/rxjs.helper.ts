@@ -8,12 +8,12 @@ function sortByNumber(a: Asset, b: Asset) {
     const bN = +b.nft.name.substring(11);
     return aN - bN;
 }
-export const filterByAttributes = (currentFilter: Observable<ICurrentFilter | null>) =>
+export const filterByAttributes = (currentFilter: Observable<ICurrentFilter | null>, loadMore: Observable<number>) =>
 ((source: Observable<Asset[]>) => {
 
 
-    return combineLatest([currentFilter, source]).pipe(map(([filter, assets]) => {
-        if (!!!filter) return assets.sort(sortByNumber);
+    return combineLatest([currentFilter, source, loadMore]).pipe(map(([filter, assets, slice]) => {
+        if (!!!filter) return assets.sort(sortByNumber).slice(0, slice);
 
 
         return assets.filter(asset => {
@@ -42,7 +42,7 @@ export const filterByAttributes = (currentFilter: Observable<ICurrentFilter | nu
                 }
             }
             return totalAttributes === matchedAttribute;
-        }).sort(sortByNumber);
+        }).sort(sortByNumber).slice(0, slice);
 
 
     }))
