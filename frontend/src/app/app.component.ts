@@ -9,9 +9,8 @@ import {MatIconRegistry} from '@angular/material/icon';
 })
 export class AppComponent {
   constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
-    iconRegistry.addSvgIcon(
-      'close',
-      sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/material/close.svg'),
-    );
+    iconRegistry.addSvgIcon('add', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/material/add.svg'));
+    iconRegistry.addSvgIcon('close', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/material/close.svg'));
+    iconRegistry.addSvgIcon('remove', sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/material/remove.svg'));
   }
 }
