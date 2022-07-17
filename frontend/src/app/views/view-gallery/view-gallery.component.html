@@ -43,17 +43,24 @@
       </div>
 
       <hr>
+      <ng-container *ngIf="isFiltering | async as _isFiltering; else filteringDone">
 
-      <ng-container *ngIf="_assets.length > 0; else empty">
-        <div class="images">
-          <button mat-flat-button *ngFor="let item of _assets ; let index = index" (click)="openDetailDialog(item)">
-            <img [src]="item.internalUrl | urlEncode" alt="" loading="lazy">
-            <div class="image-footer display-flex flex-column">
-              <span class="typo-small font-weight-800 text-align-center">{{ item.nft.name | slice: 10 }}</span>
-            </div>
-          </button>
-        </div>
+        Filtering. ..... . . .
       </ng-container>
+      <ng-template #filteringDone>
+        <ng-container *ngIf="_assets.length > 0; else empty">
+
+          <div class="images">
+            <button mat-flat-button *ngFor="let item of _assets ; trackBy:trackByNumber;let index = index"
+              (click)="openDetailDialog(item)">
+              <img [src]="item.internalUrl | urlEncode" alt="" loading="lazy">
+              <div class="image-footer display-flex flex-column">
+                <span class="typo-small font-weight-800 text-align-center">{{ item.nft.name | slice: 10 }}</span>
+              </div>
+            </button>
+          </div>
+        </ng-container>
+      </ng-template>
 
       <ng-template #empty>
         <div class="images-404">

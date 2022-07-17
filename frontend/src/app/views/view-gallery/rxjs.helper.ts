@@ -3,14 +3,17 @@ import { combineLatest, filter, map, Observable, of, switchMap, withLatestFrom }
 import { Asset, CurrentFilter } from "./view-gallery.classes"
 import { ICurrentFilter } from "./view-gallery.models"
 import { Summary } from "./view-gallery.service"
-
+function sortByNumber(a: Asset, b: Asset) {
+    const aN = +a.nft.name.substring(11);
+    const bN = +b.nft.name.substring(11);
+    return aN - bN;
+}
 export const filterByAttributes = (currentFilter: Observable<ICurrentFilter | null>) =>
 ((source: Observable<Asset[]>) => {
 
 
     return combineLatest([currentFilter, source]).pipe(map(([filter, assets]) => {
-        if (!!!filter) return assets;
-
+        if (!!!filter) return assets.sort(sortByNumber);
 
 
         return assets.filter(asset => {
@@ -39,7 +42,7 @@ export const filterByAttributes = (currentFilter: Observable<ICurrentFilter | nu
                 }
             }
             return totalAttributes === matchedAttribute;
-        })
+        }).sort(sortByNumber);
 
 
     }))
@@ -50,7 +53,6 @@ export const filterByProjectAndCollection =
     ((source: Observable<Summary>) => {
 
         const filterdFilter = currentFilter.pipe(map((f): ICurrentFilter | null => {
-            console.log('filter stuff');
             if (f && f.filterByAttributes && (!(!!!f.filterByAttributes['Projects']) || !(!!!f.filterByAttributes['Collections'])))
                 return {
                     filterByNumber: f.filterByNumber, filterByAttributes: {
@@ -62,14 +64,12 @@ export const filterByProjectAndCollection =
         }))
         return combineLatest([filterdFilter, source]).pipe(
             map(([filters, assets]) => {
-                console.log('map stuff', filters);
                 const result: Summary = {};
                 const keys = Object.keys(assets);
                 for (const key of keys) {
                     // Filter by projects
                     if (filters && filters.filterByAttributes && filters.filterByAttributes['Projects']) {
                         const projectFilterKeys = Object.keys(filters.filterByAttributes['Projects']);
-                        console.log('projectFilterKeys.length > 0 && projectFilterKeys.indexOf(key) === -1', projectFilterKeys.length > 0 && projectFilterKeys.indexOf(key) === -1)
                         if (projectFilterKeys.length > 0 && projectFilterKeys.indexOf(key) === -1) continue;
 
                     }
@@ -80,7 +80,6 @@ export const filterByProjectAndCollection =
                     for (const collectionKey of collectionKeys) {
                         if (filters && filters.filterByAttributes && filters.filterByAttributes['Collections']) {
                             const collectionFilterKeys = Object.keys(filters.filterByAttributes!['Collections']);
-                            console.log('collectionFilterKeys.length > 0 && collectionFilterKeys.indexOf(collectionKey) === -1', collectionFilterKeys.length > 0 && collectionFilterKeys.indexOf(collectionKey) === -1)
 
                             if (collectionFilterKeys.length > 0 && collectionFilterKeys.indexOf(collectionKey) === -1)
                                 continue;
@@ -101,7 +100,6 @@ export const filterByProjectAndCollection =
 export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observable<Summary>) => {
     return source.pipe(
         switchMap((summary) => {
-            console.log('mergeAssetWithJson');
             const result: Observable<Asset>[] = [];
             const projectKeys = Object.keys(summary);
             for (const projectKey of projectKeys) {

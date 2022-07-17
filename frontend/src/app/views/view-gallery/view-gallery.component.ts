@@ -12,18 +12,18 @@ import { Asset } from './view-gallery.classes';
   styleUrls: ['./view-gallery.component.scss'],
 })
 export class ViewGalleryComponent {
-  public collections?: Observable<string[]>;
   public assets?: Observable<Asset[]>;
-  public projects?: Observable<string[]>;
   public filters?: Observable<IAttributes[]>;
-  private selectedProject: string = '';
+  public isFiltering: Observable<Boolean>;
 
   constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
     this.filters = viewGalleryService.filters;
     this.assets = this.viewGalleryService.getAssets();
+    this.isFiltering = this.viewGalleryService.isFiltering;
   }
 
   filterChange(filter: AttributeFilter) {
+    this.viewGalleryService.setIsFiltering(true);
     this.viewGalleryService.setAttributeFilter(filter);
   }
 
@@ -47,10 +47,8 @@ export class ViewGalleryComponent {
       this.viewGalleryService.loadNext();
   }
 
-  selectProject(project: string) {
-    this.selectedProject = project;
-    this.collections = this.viewGalleryService.getCollections(project);
+  trackByNumber(index: number, item: Asset) {
+    return +item.nft.name.substring(11);
   }
 
-  selectCollection(collection: string) { }
 }

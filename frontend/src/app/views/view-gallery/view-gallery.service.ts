@@ -9,28 +9,17 @@ import {
   combineLatest,
   debounceTime,
   shareReplay,
-  observable,
-  combineLatestAll,
-  forkJoin,
-  mergeAll,
-  mergeMap,
-  concatAll,
-  zip,
-  zipAll,
+  tap,
+  mergeMap
 } from 'rxjs';
 import {
   AttributeFilter,
   IAttributes,
-  IAttributesFromServer,
-  ICollection,
   ICurrentFilter,
   IVariant,
-  ServerCollection,
 } from './view-gallery.models';
 import { CurrentFilter } from './view-gallery.classes';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'frontend/src/environments/environment';
-import { filterCollection, mapCollectionFromServer, mapAttributesFromServer } from '../../app.helper';
 import { filterByProjectAndCollection, mergeAssetWithJson, filterByAttributes } from './rxjs.helper';
 export interface Summary {
   [key: string]: SummaryProject;
@@ -49,6 +38,7 @@ export interface SummarySeason {
 })
 export class ViewGalleryService {
   private slice = 0;
+  private _isFiltering = new BehaviorSubject<Boolean>(false);
   private _currentFilter = new BehaviorSubject<ICurrentFilter | null>(null);
   private _loadMore = new Subject<boolean>();
   private httpData = this.httpClient.get<Summary>('projects/summary.json').pipe(shareReplay());
@@ -57,75 +47,19 @@ export class ViewGalleryService {
   getAssets() {
 
     const assets2 = this.httpData.pipe(
-      filterByProjectAndCollection(this._currentFilter.asObservable()),
+      filterByProjectAndCollection(this._currentFilter.asObservable().pipe(debounceTime(1500))),
       mergeAssetWithJson(this.httpClient),
-      filterByAttributes(this._currentFilter.asObservable())
+      filterByAttributes(this._currentFilter.asObservable().pipe(debounceTime(1500))),
+      tap(() => this._isFiltering.next(false))
     );
     return assets2;
-    const assets = this.httpData;
 
-
-    return combineLatest([this._currentFilter.asObservable().pipe(debounceTime(1500)), assets]).pipe(
-      map(([filter, assets]) => {
-        const result: any = { assets: {} };
-        const keys = Object.keys(assets);
-        for (const key of keys) {
-
-          // Filter by projects
-          if (filter && filter.filterByAttributes && filter.filterByAttributes['Projects']) {
-            const projectFilterKeys = Object.keys(filter.filterByAttributes['Projects']);
-            if (projectFilterKeys.length > 0 && projectFilterKeys.indexOf(key) === -1) continue;
-          }
-
-          // filter by collection
-          const collectionKeys = Object.keys(assets[key]);
-          for (const collectionKey of collectionKeys) {
-            if (filter && filter.filterByAttributes && filter.filterByAttributes['Collections']) {
-              const collectionFilterKeys = Object.keys(filter.filterByAttributes!['Collections']);
-              if (collectionFilterKeys.length > 0 && collectionFilterKeys.indexOf(collectionKey) === -1)
-                continue;
-            }
-
-
-
-
-
-            const assetsKeys = Object.keys(assets[key][collectionKey].assets);
-            for (const assetsKey of assetsKeys) {
-              result.assets[assetsKey] = assets[key][collectionKey].assets[assetsKey];
-            }
-          }
-
-
-
-        }
-        // if (filter)
-        // this.filterByAttributes(result, filter);
-        return result;
-      }),
-      switchMap((assets) => {
-        const assetKeys = Object.keys(assets);
-        for (const assetKey of assetKeys) {
-        }
-        return of(assets);
-      })
-    );
   }
-
-  getCollections(project: string) {
-    return this.httpData.pipe(
-      map(d => {
-        return Object.keys(d[project]);
-      }),
-    );
+  setIsFiltering(value: boolean) {
+    this._isFiltering.next(value);
   }
-
-  get projects() {
-    return this.httpData.pipe(
-      map(d => {
-        return Object.keys(d);
-      }),
-    );
+  get isFiltering() {
+    return this._isFiltering.asObservable();
   }
 
   get filters() {
@@ -243,34 +177,6 @@ export class ViewGalleryService {
       }),
     );
   }
-
-  // public get getCollection2() {
-  //   return combineLatest([
-  //     this.collectionFromServer,
-  //     this.filter,
-  //     this.loadMore,
-  //   ]).pipe(filterCollection);
-  // }
-
-  // get the collection from the server and map it to front interface
-  // private get collectionFromServer() {
-  //   return this.httpClient
-  //     .get<ServerCollection[]>(environment.apiUrl + 'collection')
-  //     .pipe(mapCollectionFromServer); // map using rxjs the json from server to a front end format
-  // }
-
-  // public get getCollection() {
-  //   return this.httpClient
-  //     .get<ServerCollection[]>(environment.apiUrl + 'collection')
-  //     .pipe(mapCollectionFromServer);
-  // }
-
-  // // get the attributes from the php server
-  // public get getAttributes() {
-  //   return this.httpClient
-  //     .get<IAttributesFromServer>(environment.apiUrl + 'attributes')
-  //     .pipe(mapAttributesFromServer); // map json data from the server to front interfaces using rxjs/map
-  // }
 
   private get currentFilter() {
     const f = this._currentFilter.getValue();
