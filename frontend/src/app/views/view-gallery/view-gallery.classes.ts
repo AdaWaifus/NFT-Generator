@@ -1,21 +1,31 @@
-import {BehaviorSubject} from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import {
   AttributeFilter,
+  IAsset,
   IAttributes,
   ICollection,
   ICurrentFilter,
   IVariant,
   ServerCollection,
 } from './view-gallery.models';
-import {camelize} from '../../app.utilities';
+import { camelize } from '../../app.utilities';
 
 export class Variant implements IVariant {
-  constructor(public name: string, public count: number) {}
+  constructor(public name: string, public count: number) { }
 }
 
 export class Attributes implements IAttributes {
   public totalFilters = 0;
-  constructor(public title: string, public variants: IVariant[]) {}
+  constructor(public title: string, public variants: IVariant[]) { }
+}
+
+export class Asset implements IAsset {
+  internalUrl: string;
+  nft: any;
+  constructor(url: string, jsonValues: any) {
+    this.internalUrl = url;
+    this.nft = jsonValues;
+  }
 }
 
 // TODO ALEX PLEASE DONT USE THIS REMODELLING IN THIS PROJECT, HERE WE NEED TO USE EXACTLY THE GENERATOR CREATED METADATA WHICH CAN CHANGE IN EVERY PROJECT
@@ -28,7 +38,7 @@ export class Collection implements ICollection {
   homepage: string;
   publisher: string;
   artist_url: string;
-  attributes: {[key: string]: string};
+  attributes: { [key: string]: string };
   sort: number;
   collection: string;
   fingerprint: string;
@@ -62,7 +72,7 @@ export class Collection implements ICollection {
 
 export class CurrentFilter implements ICurrentFilter {
   filterByNumber: number | null = null;
-  filterByAttributes: {[key: string]: {[key: string]: boolean}} | null = null;
+  filterByAttributes: { [key: string]: { [key: string]: boolean } } | null = null;
 
   constructor(previousFilter: ICurrentFilter | null) {
     if (!previousFilter) this.init();

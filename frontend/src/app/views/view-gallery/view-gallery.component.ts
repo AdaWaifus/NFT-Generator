@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
-import {AttributeFilter, IAttributes} from './view-gallery.models';
-import {Observable} from 'rxjs';
-import {SummarySeason, ViewGalleryService} from './view-gallery.service';
-import {MatDialog} from '@angular/material/dialog';
-import {GalleryDetailDialogComponent} from './gallery-detail-dialog/gallery-detail-dialog.component';
+import { Component } from '@angular/core';
+import { AttributeFilter, IAttributes } from './view-gallery.models';
+import { Observable } from 'rxjs';
+import { SummarySeason, ViewGalleryService } from './view-gallery.service';
+import { MatDialog } from '@angular/material/dialog';
+import { GalleryDetailDialogComponent } from './gallery-detail-dialog/gallery-detail-dialog.component';
+import { Asset } from './view-gallery.classes';
 
 @Component({
   selector: 'app-view-gallery',
@@ -12,7 +13,7 @@ import {GalleryDetailDialogComponent} from './gallery-detail-dialog/gallery-deta
 })
 export class ViewGalleryComponent {
   public collections?: Observable<string[]>;
-  public assets?: Observable<SummarySeason>;
+  public assets?: Observable<Asset[]>;
   public projects?: Observable<string[]>;
   public filters?: Observable<IAttributes[]>;
   private selectedProject: string = '';
@@ -51,5 +52,5 @@ export class ViewGalleryComponent {
     this.collections = this.viewGalleryService.getCollections(project);
   }
 
-  selectCollection(collection: string) {}
+  selectCollection(collection: string) { }
 }

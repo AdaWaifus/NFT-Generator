@@ -21,10 +21,13 @@ export interface IVariant {
 export interface ICurrentFilter {
   filterByNumber: number | null;
   filterByAttributes: {
-    [key: string]: {[key: string]: boolean};
+    [key: string]: { [key: string]: boolean };
   } | null;
 }
-
+export interface IAsset {
+  internalUrl: string;
+  nft: any;
+}
 export interface ServerCollection {
   id: string;
   name: string;
@@ -55,7 +58,7 @@ export interface ICollection {
   homepage: string;
   publisher: string;
   artist_url: string;
-  attributes: {[key: string]: string};
+  attributes: { [key: string]: string };
   sort: number;
   collection: string;
   fingerprint: string;
