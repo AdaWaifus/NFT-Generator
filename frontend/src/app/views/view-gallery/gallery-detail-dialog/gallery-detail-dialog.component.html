@@ -1,9 +1,9 @@
 <div class="content-wrapper">
-  <img src="https://dummyimage.com/512x512/404040/ffffff.png" alt="">
+  <img [src]="data.internalUrl" alt="">
   <div class="content">
-    <h2 class="text-align-center">{{ data.name }}</h2>
+    <h2 class="text-align-center">{{ data.nft.name }}</h2>
     <ul>
-      <li *ngFor="let attribute of data.attributes | keyvalue">
+      <li *ngFor="let attribute of data.nft.attributes | keyvalue">
         <h3 class="no-margin typo-small font-weight-800">{{ attribute.key }}</h3>
         <p class="no-margin typo-small">{{ attribute.value }}</p>
       </li>

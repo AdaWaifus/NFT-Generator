@@ -1,5 +1,6 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Asset } from '../view-gallery.classes';
 
 @Component({
   selector: 'app-gallery-detail-dialog',
@@ -7,5 +8,5 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
   styleUrls: ['./gallery-detail-dialog.component.scss'],
 })
 export class GalleryDetailDialogComponent {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Asset) { }
 }

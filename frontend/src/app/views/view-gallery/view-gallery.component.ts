@@ -27,7 +27,7 @@ export class ViewGalleryComponent {
     this.viewGalleryService.setAttributeFilter(filter);
   }
 
-  openDetailDialog(item: any) {
+  openDetailDialog(item: Asset) {
     this.matDialog.open(GalleryDetailDialogComponent, {
       data: item,
       panelClass: 'detail-dialog',
