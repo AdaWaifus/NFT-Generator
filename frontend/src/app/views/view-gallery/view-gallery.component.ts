@@ -1,11 +1,9 @@
-import { Component } from '@angular/core';
-import { AttributeFilter, IAttributes } from './view-gallery.models';
-import { Collection } from "./view-gallery.classes";
-import { combineLatest, debounceTime, map, Observable } from "rxjs";
-import { SummarySeason, ViewGalleryService } from "./view-gallery.service";
-import { MatDialog } from "@angular/material/dialog";
-import { GalleryDetailDialogComponent } from "./gallery-detail-dialog/gallery-detail-dialog.component";
-import { HttpClient } from '@angular/common/http';
+import {Component} from '@angular/core';
+import {AttributeFilter, IAttributes} from './view-gallery.models';
+import {Observable} from 'rxjs';
+import {SummarySeason, ViewGalleryService} from './view-gallery.service';
+import {MatDialog} from '@angular/material/dialog';
+import {GalleryDetailDialogComponent} from './gallery-detail-dialog/gallery-detail-dialog.component';
 
 @Component({
   selector: 'app-view-gallery',
@@ -22,15 +20,10 @@ export class ViewGalleryComponent {
   constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
     this.filters = viewGalleryService.filters;
     this.assets = this.viewGalleryService.getAssets();
-
   }
 
   filterChange(filter: AttributeFilter) {
     this.viewGalleryService.setAttributeFilter(filter);
-  }
-
-  trackById(index: number, item: Collection) {
-    return item.id;
   }
 
   openDetailDialog(item: any) {
@@ -47,13 +40,11 @@ export class ViewGalleryComponent {
     }
     this.viewGalleryService.setNumberFilter(+(event.target as HTMLInputElement).value);
   }
-  onVisible(event: any) {
-    if (event === true) this.viewGalleryService.loadNext();
-  }
+
   selectProject(project: string) {
     this.selectedProject = project;
     this.collections = this.viewGalleryService.getCollections(project);
   }
-  selectCollection(collection: string) {
-  }
+
+  selectCollection(collection: string) {}
 }

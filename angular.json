@@ -33,7 +33,8 @@
               }
             ],
             "styles": [
-              "frontend/src/styles.scss"
+              "frontend/src/scss/styles.scss",
+              "frontend/src/scss/material.scss"
             ],
             "scripts": []
           },
@@ -101,7 +102,8 @@
               "frontend/src/assets"
             ],
             "styles": [
-              "frontend/src/styles.scss"
+              "frontend/src/scss/styles.scss",
+              "frontend/src/scss/material.scss"
             ],
             "scripts": []
           }

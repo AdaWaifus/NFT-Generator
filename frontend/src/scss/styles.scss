@@ -1,0 +1,11 @@
+@use 'scss-elements/variables';
+@use 'scss-elements/mixins';
+@use "variables" as *;
+@use 'globals';
+
+// SCSS Elements
+@import 'config';
+@import 'typography';
+@import 'scss-elements/utilities/display-flex';
+@import 'scss-elements/utilities/gap';
+@import 'scss-elements/utilities/spacings';

@@ -1,0 +1,25 @@
+@mixin res-background-image(
+  $path: '/assets/images/',
+  $fileName: null,
+  $resolutions: null,
+  $fileType: '.jpg',
+  $unitType: 'px',
+  $startFrom: 0
+) {
+  @for $i from 1 through length($resolutions) {
+    $min: $startFrom;
+    @if $i > 1 {
+      $min: nth($resolutions, $i - 1);
+    }
+    $max: nth($resolutions, $i);
+    @if $i == length($resolutions) {
+      @media only screen and (min-width: $min + 1+$unitType) {
+        background-image: url('#{$path}#{$fileName}-#{$max}#{$fileType}');
+      }
+    } @else {
+      @media only screen and (min-width: $min + if($i > 1, 1, 0)+$unitType) and (max-width: $max+$unitType) {
+        background-image: url('#{$path}#{$fileName}-#{$max}#{$fileType}');
+      }
+    }
+  }
+}

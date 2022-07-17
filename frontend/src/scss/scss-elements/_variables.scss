@@ -1,0 +1,14 @@
+// https://material.angular.io/cdk/layout/overview#predefined-breakpoints
+$res-xs: 0 !default; // Smartphone
+$res-sm: 600px !default; // Tablet
+$res-md: 960px !default; // Large Tablet
+$res-lg: 1280px !default; // Large Tablet and Notebooks
+$res-xl: 1920px !default; // Desktop +
+
+$breakpoints: (
+  'xs': $res-xs,
+  'sm': $res-sm,
+  'md': $res-md,
+  'lg': $res-lg,
+  'xl': $res-xl,
+) !default;

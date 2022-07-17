@@ -1,0 +1,51 @@
+@use 'scss-elements/mixins';
+
+
+// Register Fonts
+/*@include mixins.font-face('Nunito', 400, '/assets/fonts/nunito/400.woff2', 'swap', 'Nunito Regular', 'Nunito-Regular');*/
+@include mixins.font-face('Nunito', 500, '/assets/fonts/nunito/500.woff2', 'swap', 'Nunito Medium', 'Nunito-Medium');
+@include mixins.font-face('Nunito', 700, '/assets/fonts/nunito/700.woff2', 'swap', 'Nunito Bold', 'Nunito-Bold');
+@include mixins.font-face('Nunito', 800, '/assets/fonts/nunito/800.woff2', 'swap', 'Nunito ExtraBold', 'Nunito-ExtraBold');
+
+
+body {
+  font-size: var(--paragraph-default-font-size-rfs);
+  font-weight: var(--paragraph-default-font-weight);
+  line-height: var(--paragraph-default-line-height);
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-accent);
+    text-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+  }
+
+  .font-weight-500 {
+    font-weight: 500 !important;
+  }
+
+  .font-weight-700 {
+    font-weight: 700 !important;
+  }
+
+  .font-weight-800 {
+    font-weight: 800 !important;
+  }
+
+  .text-align-center {
+    text-align: center;
+  }
+
+  .uppercase {
+    text-transform: uppercase;
+  }
+
+  .color-text {
+    color: var(--color-text);
+  }
+
+  .color-accent {
+    color: var(--color-accent);
+  }
+}
+
+
+@import 'scss-elements/utilities/typography';

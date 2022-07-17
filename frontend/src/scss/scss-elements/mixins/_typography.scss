@@ -1,0 +1,163 @@
+// Headline Styles
+@mixin headline-style($var: 'h1', $important: 'normal') {
+  @if ($var == 'h1') {
+    @if ($important == 'normal') {
+      font-size: var(--h1-font-size-rfs);
+      font-weight: var(--h1-font-weight);
+      line-height: var(--h1-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--h1-font-size-rfs) !important;
+      font-weight: var(--h1-font-weight) !important;
+      line-height: var(--h1-line-height) !important;
+    }
+  }
+  @if ($var == 'h2') {
+    @if ($important == 'normal') {
+      font-size: var(--h2-font-size-rfs);
+      font-weight: var(--h2-font-weight);
+      line-height: var(--h2-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--h2-font-size-rfs) !important;
+      font-weight: var(--h2-font-weight) !important;
+      line-height: var(--h2-line-height) !important;
+    }
+  }
+  @if ($var == 'h3') {
+    @if ($important == 'normal') {
+      font-size: var(--h3-font-size-rfs);
+      font-weight: var(--h3-font-weight);
+      line-height: var(--h3-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--h3-font-size-rfs) !important;
+      font-weight: var(--h3-font-weight) !important;
+      line-height: var(--h3-line-height) !important;
+    }
+  }
+  @if ($var == 'h4') {
+    @if ($important == 'normal') {
+      font-size: var(--h4-font-size-rfs);
+      font-weight: var(--h4-font-weight);
+      line-height: var(--h4-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--h4-font-size-rfs) !important;
+      font-weight: var(--h4-font-weight) !important;
+      line-height: var(--h4-line-height) !important;
+    }
+  }
+  @if ($var == 'h5') {
+    @if ($important == 'normal') {
+      font-size: var(--h5-font-size-rfs);
+      font-weight: var(--h5-font-weight);
+      line-height: var(--h5-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--h5-font-size-rfs) !important;
+      font-weight: var(--h5-font-weight) !important;
+      line-height: var(--h5-line-height) !important;
+    }
+  }
+  @if ($var == 'h6') {
+    @if ($important == 'normal') {
+      font-size: var(--h6-font-size-rfs);
+      font-weight: var(--h6-font-weight);
+      line-height: var(--h6-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--h6-font-size-rfs) !important;
+      font-weight: var(--h6-font-weight) !important;
+      line-height: var(--h6-line-height) !important;
+    }
+  }
+}
+
+// Typo Styles
+@mixin typo-style($var: 'default', $important: 'normal') {
+  @if ($var == 'ultra-small') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-ultra-small-font-size-rfs);
+      font-weight: var(--paragraph-ultra-small-font-weight);
+      line-height: var(--paragraph-ultra-small-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-ultra-small-font-size-rfs) !important;
+      font-weight: var(--paragraph-ultra-small-font-weight) !important;
+      line-height: var(--paragraph-ultra-small-line-height) !important;
+    }
+  }
+  @if ($var == 'very-small') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-very-small-font-size-rfs);
+      font-weight: var(--paragraph-very-small-font-weight);
+      line-height: var(--paragraph-very-small-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-very-small-font-size-rfs) !important;
+      font-weight: var(--paragraph-very-small-font-weight) !important;
+      line-height: var(--paragraph-very-small-line-height) !important;
+    }
+  }
+  @if ($var == 'small') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-small-font-size-rfs);
+      font-weight: var(--paragraph-small-font-weight);
+      line-height: var(--paragraph-small-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-small-font-size-rfs) !important;
+      font-weight: var(--paragraph-small-font-weight) !important;
+      line-height: var(--paragraph-small-line-height) !important;
+    }
+  }
+  @if ($var == 'default') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-default-font-size-rfs);
+      font-weight: var(--paragraph-default-font-weight);
+      line-height: var(--paragraph-default-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-default-font-size-rfs) !important;
+      font-weight: var(--paragraph-default-font-weight) !important;
+      line-height: var(--paragraph-default-line-height) !important;
+    }
+  }
+  @if ($var == 'large') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-large-font-size-rfs);
+      font-weight: var(--paragraph-large-font-weight);
+      line-height: var(--paragraph-large-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-large-font-size-rfs) !important;
+      font-weight: var(--paragraph-large-font-weight) !important;
+      line-height: var(--paragraph-large-line-height) !important;
+    }
+  }
+  @if ($var == 'very-large') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-very-large-font-size-rfs);
+      font-weight: var(--paragraph-very-large-font-weight);
+      line-height: var(--paragraph-very-large-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-very-large-font-size-rfs) !important;
+      font-weight: var(--paragraph-very-large-font-weight) !important;
+      line-height: var(--paragraph-very-large-line-height) !important;
+    }
+  }
+  @if ($var == 'ultra-large') {
+    @if ($important == 'normal') {
+      font-size: var(--paragraph-ultra-large-font-size-rfs);
+      font-weight: var(--paragraph-ultra-large-font-weight);
+      line-height: var(--paragraph-ultra-large-line-height);
+    }
+    @if ($important == 'important') {
+      font-size: var(--paragraph-ultra-large-font-size-rfs) !important;
+      font-weight: var(--paragraph-ultra-large-font-weight) !important;
+      line-height: var(--paragraph-ultra-large-line-height) !important;
+    }
+  }
+}

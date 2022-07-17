@@ -1,0 +1,79 @@
+@use 'sass:map';
+@use 'sass:string';
+@use '../variables' as variable;
+@use '../mixins' as mixin;
+
+$gap: (
+  'enabled': false, // Enables / Disables all gap classes
+  'shorten-class-names': false,
+  'spacings': ('4px', '8px', '12px', '16px', '24px', '32px', '40px', '48px', '56px'),
+  'base-classes': false,
+  'min-classes': false,
+  'max-classes': false,
+  'from-to-classes': false,
+) !default;
+
+@if map.get($gap, 'enabled') {
+
+  // Gap Classes
+  @if map.get($gap, 'base-classes') {
+    @each $space in map.get($gap, 'spacings') {
+      .#{if(map.get($gap, 'shorten-class-names'), g, gap)}-#{string.slice($space, 0, -3)} {
+        gap: string.unquote($space)
+      }
+    }
+  }
+
+  // Gap Min Classes
+  @if map.get($gap, 'min-classes') {
+    @each $breakpoint, $res in variable.$breakpoints {
+      @include mixin.media-min($res) {
+        @each $space in map.get($gap, 'spacings') {
+          .#{if(map.get($gap, 'shorten-class-names'), g, gap)}-#{string.slice($space, 0, -3)}-min-#{$breakpoint} {
+            gap: string.unquote($space) !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Gap Max Classes
+  @if map.get($gap, 'max-classes') {
+    @each $breakpoint, $res in variable.$breakpoints {
+      @include mixin.media-max($res) {
+        @each $space in map.get($gap, 'spacings') {
+          .#{if(map.get($gap, 'shorten-class-names'), g, gap)}-#{string.slice($space, 0, -3)}-min-#{$breakpoint} {
+            gap: string.unquote($space) !important;
+          }
+        }
+      }
+    }
+  }
+
+  // Gap From > To Classes
+  @if map.get($gap, 'from-to-classes') {
+    @each $breakpointFrom, $resFrom in variable.$breakpoints {
+
+      $typo-breakpoint-keys: map-keys(variable.$breakpoints);
+      $iFrom: index($typo-breakpoint-keys, $breakpointFrom);
+
+      @each $breakpointTo, $resTo in variable.$breakpoints {
+        $iTo: index($typo-breakpoint-keys, $breakpointTo);
+
+        @if $iTo > $iFrom {
+          @include mixin.media-from-to($resFrom, $resTo) {
+
+            @each $space in map.get($gap, 'spacings') {
+              .#{if(map.get($gap, 'shorten-class-names'), g, gap)}-#{string.slice($space, 0, -3)}-from-#{$breakpointFrom}-to-#{$breakpointTo} {
+                gap: string.unquote($space) !important;
+              }
+            }
+
+          }
+        }
+      }
+
+    }
+  }
+
+}

@@ -1,0 +1,222 @@
+@use 'sass:map';
+@use 'sass:string';
+@use '../variables';
+@use '../mixins';
+
+
+$spacings: (
+  'margin': (
+    'enabled': false, // Enables / Disables all margin classes
+    'shorten-class-names': false, // Shortens the class names to reduce the css size (.no-margin > .no-m)
+    'directions': ('top', 'right', 'bottom', 'left'), // Defines the directions. if you don't want directions, just pass false.
+    'spacings': ('4px', '8px', '12px', '16px', '24px', '32px', '40px', '48px', '56px'), // Define the distances. Do not overdo it...
+
+    'no-classes': false, // .no-margin, .no-margin-top, .no-margin-right etc...
+    'no-min-classes': false, // .no-margin-min-xs, .no-margin-top-min-xs, .no-margin-right-min-xs etc...
+    'no-max-classes': false, // .no-margin-max-xs, .no-margin-top-max-xs, .no-margin-right-max-xs etc...
+    'no-from-to-classes': false, // .no-margin-xs-to-sm, .no-margin-top-xs-to-sm, .no-margin-right-xs-to-sm etc...
+
+    'base-classes': false, // .margin-4, .margin-top-4, .margin-right-4 etc...
+    'base-min-classes': false, // .margin-4-min-xs, .margin-top-4-min-xs, .margin-right-4-min-xs etc...
+    'base-max-classes': false, // .margin-4-max-xs, .margin-top-4-max-xs, .margin-right-4-max-xs etc...
+    'base-from-to-classes': false, // .margin-xs-to-sm, .margin-top-xs-to-sm, .margin-right-xs-to-sm etc...
+  ),
+  'padding': (
+    'enabled': false, // Enables / Disables all padding classes
+    'shorten-class-names': false, // Shortens the class names to reduce the css size (.no-padding > .no-p)
+    'directions': ('top', 'right', 'bottom', 'left'), // Defines the directions. if you don't want directions, just pass false.
+    'spacings': ('4px', '8px', '12px', '16px', '24px', '32px', '40px', '48px', '56px'), // Define the distances. Do not overdo it...
+
+    'no-classes': false, // .no-padding, .no-padding-top, .no-padding-right etc...
+    'no-min-classes': false, // .no-padding-min-xs, .no-padding-top-min-xs, .no-padding-right-min-xs etc...
+    'no-max-classes': false, // .no-padding-max-xs, .no-padding-top-max-xs, .no-padding-right-max-xs etc...
+    'no-from-to-classes': false, // .no-padding-xs-to-sm, .no-padding-top-xs-to-sm, .no-padding-right-xs-to-sm etc...
+
+    'base-classes': false, // .padding-4, .padding-top-4, .padding-right-4 etc...
+    'base-min-classes': false, // .padding-4-min-xs, .padding-top-4-min-xs, .padding-right-4-min-xs etc...
+    'base-max-classes': false, // .padding-4-max-xs, .padding-top-4-max-xs, .padding-right-4-max-xs etc...
+    'base-from-to-classes': false, // .padding-xs-to-sm, .padding-top-xs-to-sm, .padding-right-xs-to-sm etc...
+  )
+) !default;
+
+
+@each $variants, $variantObject in $spacings {
+
+  @each $type in $variants {
+
+    @if map.get($variantObject, 'enabled') {
+
+      // No Classes
+      @if map.get($variantObject, 'no-classes') {
+        .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)} {
+          #{$type}: 0 !important;
+        }
+        @if map.get($variantObject, 'directions') {
+          @each $direction in map.get($variantObject, 'directions') {
+            .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)} {
+              #{$type}-#{$direction}: 0 !important;
+            }
+          }
+        }
+      }
+
+      // No Min Classes
+      @if map.get($variantObject, 'no-min-classes') {
+        @each $breakpoint, $res in variables.$breakpoints {
+          @include mixins.media-min($res) {
+            .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-min-#{$breakpoint} {
+              #{$type}: 0 !important;
+            }
+            @if map.get($variantObject, 'directions') {
+              @each $direction in map.get($variantObject, 'directions') {
+                .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-min-#{$breakpoint} {
+                  #{$type}-#{$direction}: 0 !important;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // No Max Classes
+      @if map.get($variantObject, 'no-max-classes') {
+        @each $breakpoint, $res in variables.$breakpoints {
+          @include mixins.media-max($res) {
+            .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-max-#{$breakpoint} {
+              #{$type}: 0 !important;
+            }
+            @if map.get($variantObject, 'directions') {
+              @each $direction in map.get($variantObject, 'directions') {
+                .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-max-#{$breakpoint} {
+                  #{$type}-#{$direction}: 0 !important;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // No From > To Classes
+      @if map.get($variantObject, 'no-from-to-classes') {
+        @each $breakpointFrom, $resFrom in variables.$breakpoints {
+
+          $typo-breakpoint-keys: map-keys(variables.$breakpoints);
+          $iFrom: index($typo-breakpoint-keys, $breakpointFrom);
+
+          @each $breakpointTo, $resTo in variables.$breakpoints {
+            $iTo: index($typo-breakpoint-keys, $breakpointTo);
+
+            @if $iTo > $iFrom {
+              @include mixins.media-from-to($resFrom, $resTo) {
+
+                .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+                  #{$type}: 0 !important;
+                }
+                @if map.get($variantObject, 'directions') {
+                  @each $direction in map.get($variantObject, 'directions') {
+                    .no-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+                      #{$type}-#{$direction}: 0 !important;
+                    }
+                  }
+                }
+
+              }
+            }
+          }
+
+        }
+      }
+
+      // Base Classes
+      @if map.get($variantObject, 'base-classes') {
+        @each $spacing in map.get($variantObject, 'spacings') {
+          .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{string.slice($spacing, 0, -3)} {
+            #{$type}: string.unquote($spacing) !important;
+          }
+          @if map.get($variantObject, 'directions') {
+            @each $direction in map.get($variantObject, 'directions') {
+              .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-#{string.slice($spacing, 0, -3)} {
+                #{$type}-#{$direction}: string.unquote($spacing) !important;
+              }
+            }
+          }
+        }
+      }
+
+      // Base Min Classes
+      @if map.get($variantObject, 'base-min-classes') {
+        @each $breakpoint, $res in variables.$breakpoints {
+          @include mixins.media-min($res) {
+            @each $spacing in map.get($variantObject, 'spacings') {
+              .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{string.slice($spacing, 0, -3)}-min-#{$breakpoint} {
+                #{$type}: string.unquote($spacing) !important;
+              }
+              @if map.get($variantObject, 'directions') {
+                @each $direction in map.get($variantObject, 'directions') {
+                  .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-#{string.slice($spacing, 0, -3)}-min-#{$breakpoint} {
+                    #{$type}-#{$direction}: string.unquote($spacing) !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Base Max Classes
+      @if map.get($variantObject, 'base-max-classes') {
+        @each $breakpoint, $res in variables.$breakpoints {
+          @include mixins.media-max($res) {
+            @each $spacing in map.get($variantObject, 'spacings') {
+              .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{string.slice($spacing, 0, -3)}-max-#{$breakpoint} {
+                #{$type}: string.unquote($spacing) !important;
+              }
+              @if map.get($variantObject, 'directions') {
+                @each $direction in map.get($variantObject, 'directions') {
+                  .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-#{string.slice($spacing, 0, -3)}-max-#{$breakpoint} {
+                    #{$type}-#{$direction}: string.unquote($spacing) !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Base From > To Classes
+      @if map.get($variantObject, 'base-from-to-classes') {
+        @each $breakpointFrom, $resFrom in variables.$breakpoints {
+
+          $typo-breakpoint-keys: map-keys(variables.$breakpoints);
+          $iFrom: index($typo-breakpoint-keys, $breakpointFrom);
+
+          @each $breakpointTo, $resTo in variables.$breakpoints {
+            $iTo: index($typo-breakpoint-keys, $breakpointTo);
+
+            @if $iTo > $iFrom {
+              @include mixins.media-from-to($resFrom, $resTo) {
+                @each $spacing in map.get($variantObject, 'spacings') {
+                  .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+                    #{$type}: string.unquote($spacing) !important;
+                  }
+                  @if map.get($variantObject, 'directions') {
+                    @each $direction in map.get($variantObject, 'directions') {
+                      .#{if(map.get($variantObject, 'shorten-class-names'), string.slice($type, 0, 1), $type)}-#{if(map.get($variantObject, 'shorten-class-names'), string.slice($direction, 0, 1), $direction)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+                        #{$type}-#{$direction}: string.unquote($spacing) !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+        }
+      }
+
+    }
+
+  }
+
+}
+

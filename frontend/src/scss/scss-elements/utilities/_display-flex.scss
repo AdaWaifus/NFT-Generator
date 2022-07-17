@@ -1,0 +1,115 @@
+@use 'sass:map';
+@use '../variables' as variable;
+@use '../mixins' as mixin;
+
+$displayFlex: (
+  'enabled': false, // Enables / Disables all classes
+  'shorten-class-names': false,
+  'extended-utilities': true,
+  'base-classes': true,
+  'min-classes': false,
+  'max-classes': false,
+  'from-to-classes': false,
+) !default;
+
+@if map.get($displayFlex, 'enabled') {
+
+  // Flex Classes
+  @if map.get($displayFlex, 'base-classes') {
+    .#{if(map.get($displayFlex, 'shorten-class-names'), d-flex, display-flex)} {
+      display: flex;
+    }
+
+    // Extended Utilities Classes
+    @if map.get($displayFlex, 'extended-utilities') {
+      // Flex Column
+      .#{if(map.get($displayFlex, 'shorten-class-names'), flex-col, flex-column)} {
+        flex-direction: column;
+      }
+      // Flex Row
+      .#{if(map.get($displayFlex, 'shorten-class-names'), flex-row, flex-row)} {
+        flex-direction: row;
+      }
+    }
+  }
+
+  // Flex Min Classes
+  @if map.get($displayFlex, 'min-classes') {
+    @each $breakpoint, $res in variable.$breakpoints {
+      @include mixin.media-min($res) {
+        .#{if(map.get($displayFlex, 'shorten-class-names'), d-flex, display-flex)}-min-#{$breakpoint} {
+          display: flex;
+        }
+
+        // Extended Utilities Classes
+        @if map.get($displayFlex, 'extended-utilities') {
+          // Flex Column
+          .#{if(map.get($displayFlex, 'shorten-class-names'), flex-col, flex-column)}-min-#{$breakpoint} {
+            flex-direction: column;
+          }
+          // Flex Row
+          .#{if(map.get($displayFlex, 'shorten-class-names'), flex-row, flex-row)}-min-#{$breakpoint} {
+            flex-direction: row;
+          }
+        }
+      }
+    }
+  }
+
+  // Flex Max Classes
+  @if map.get($displayFlex, 'max-classes') {
+    @each $breakpoint, $res in variable.$breakpoints {
+      @include mixin.media-max($res) {
+        .#{if(map.get($displayFlex, 'shorten-class-names'), d-flex, display-flex)}-max-#{$breakpoint} {
+          display: flex;
+        }
+
+        // Extended Utilities Classes
+        @if map.get($displayFlex, 'extended-utilities') {
+          // Flex Column
+          .#{if(map.get($displayFlex, 'shorten-class-names'), flex-col, flex-column)}-max-#{$breakpoint} {
+            flex-direction: column;
+          }
+          // Flex Row
+          .#{if(map.get($displayFlex, 'shorten-class-names'), flex-row, flex-row)}-max-#{$breakpoint} {
+            flex-direction: row;
+          }
+        }
+      }
+    }
+  }
+
+  // Gap From > To Classes
+  @if map.get($displayFlex, 'from-to-classes') {
+    @each $breakpointFrom, $resFrom in variable.$breakpoints {
+
+      $typo-breakpoint-keys: map-keys(variable.$breakpoints);
+      $iFrom: index($typo-breakpoint-keys, $breakpointFrom);
+
+      @each $breakpointTo, $resTo in variable.$breakpoints {
+        $iTo: index($typo-breakpoint-keys, $breakpointTo);
+
+        @if $iTo > $iFrom {
+          @include mixin.media-from-to($resFrom, $resTo) {
+            .#{if(map.get($displayFlex, 'shorten-class-names'), d-flex, display-flex-from)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+              display: flex;
+            }
+
+            // Extended Utilities Classes
+            @if map.get($displayFlex, 'extended-utilities') {
+              // Flex Column
+              .#{if(map.get($displayFlex, 'shorten-class-names'), flex-col, flex-column-from)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+                flex-direction: column;
+              }
+              // Flex Row
+              .#{if(map.get($displayFlex, 'shorten-class-names'), flex-row, flex-row-from)}-#{$breakpointFrom}-to-#{$breakpointTo} {
+                flex-direction: row;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

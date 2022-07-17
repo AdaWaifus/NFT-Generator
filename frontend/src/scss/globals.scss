@@ -1,0 +1,66 @@
+@use 'scss-elements/variables';
+@use 'scss-elements/mixins';
+
+html {
+  box-sizing: border-box;
+  background-color: var(--color-primary-500);
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  font-family: 'Nunito', sans-serif;
+}
+
+mat-checkbox {
+  label.mat-checkbox-layout {
+    display: flex;
+    .mat-checkbox-inner-container {
+      margin-right: 12px;
+      margin-left: 0;
+    }
+  }
+}
+
+.detail-dialog {
+  @include mixins.media-max(variables.$res-sm) {
+    width: 100% !important;
+    max-width: calc(100vw - 8px) !important;
+    height: 100% !important;
+    max-height: calc(100vh - 8px) !important;
+  }
+  @include mixins.media-from-to(variables.$res-sm, variables.$res-md) {
+    width: 100% !important;
+    max-width: 600px !important;
+    height: 100% !important;
+    max-height: 80vw !important;
+  }
+
+  .mat-dialog-container {
+    padding: 0;
+    background-color: var(--color-primary-500);
+  }
+
+  .mat-dialog-content {
+    // max-height: initial !important;
+  }
+}
+
+hr {
+  height: 1px;
+  margin: 0;
+  border: none;
+  display: block;
+  background-color: rgba(var(--color-accent-rgb), .48);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

@@ -1,0 +1,15 @@
+// $grids: 4;   // Set the count of elements each row
+// $space: 8px; // Default is 8x2 = 16px (Google Material's Default)
+// $width: 100% / $userEachRow; // Dont Touch this!
+
+@mixin perfect-grid($grids: 4, $space: 8px, $width: 100% / $grids) {
+  width: calc(#{$width} - #{((($grids * $space * 2)) - ($space * 2)) / $grids});
+  margin: 0 $space;
+  // margin: 0 $space $space * 2 $space; TODO - Think about better solution to remove bottom margin if only 1 Row in Grid
+  &:nth-child(#{$grids}n + 1) {
+    margin-left: 0;
+  }
+  &:nth-child(#{$grids}n + #{$grids}) {
+    margin-right: 0;
+  }
+}

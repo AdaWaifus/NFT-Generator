@@ -1,0 +1,37 @@
+// MEDIA QUERY MIXINS
+//////////////////////////////////////////
+@mixin media-min($var) {
+  @media only screen and (min-width: $var) {
+    @content;
+  }
+}
+
+@mixin media-min-and-orientation($var, $orientation) {
+  @media only screen and (min-width: $var) and (orientation: $orientation) {
+    @content;
+  }
+}
+
+@mixin media-max($var) {
+  @media only screen and (max-width: $var - 1px) {
+    @content;
+  }
+}
+
+@mixin media-max-and-orientation($var, $orientation) {
+  @media only screen and (max-width: $var - 1px) and (orientation: $orientation) {
+    @content;
+  }
+}
+
+@mixin media-from-to($var1, $var2) {
+  @media only screen and (min-width: $var1) and (max-width: $var2 - 1px) {
+    @content;
+  }
+}
+
+@mixin media-orientation($orientation) {
+  @media only screen and (orientation: $orientation) {
+    @content;
+  }
+}

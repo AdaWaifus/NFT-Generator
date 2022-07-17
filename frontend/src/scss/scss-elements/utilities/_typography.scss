@@ -1,0 +1,184 @@
+@use 'sass:map';
+@use 'sass:string';
+@use '../variables';
+@use '../functions';
+@use '../mixins';
+
+
+// RFS Config (Defines from which resolution the fonts should not scale further)
+$rfs-breakpoint: 1200px !default;
+@import '../vendor/rfs'; // Must use @import because with @use i cant overwrite $rfs-breakpoint...
+
+
+$typography: (
+  'headline':  (
+    'enabled': false,
+    'base-classes': true,
+    'base-min-classes': false, // Dont use this because RFS Max Grow dont work yet
+    'base-max-classes': false, // Dont use this because RFS Max Grow dont work yet
+    'base-from-to-classes': false, // Dont use this because RFS Max Grow dont work yet
+    'variants': (
+      'h1': ('font-size': 64px, 'font-weight': 700, 'line-height': 92px,),
+      'h2': ('font-size': 48px, 'font-weight': 700, 'line-height': 72px,),
+      'h3': ('font-size': 40px, 'font-weight': 700, 'line-height': 58px,),
+      'h4': ('font-size': 32px, 'font-weight': 700, 'line-height': 46px,),
+      'h5': ('font-size': 24px, 'font-weight': 700, 'line-height': 36px,),
+      'h6': ('font-size': 20px, 'font-weight': 700, 'line-height': 30px,),
+    )
+  ),
+  'paragraph':  (
+    'enabled': false,
+    'base-classes': true,
+    'base-min-classes': false, // Dont use this because RFS Max Grow dont work yet
+    'base-max-classes': false, // Dont use this because RFS Max Grow dont work yet
+    'base-from-to-classes': false, // Dont use this because RFS Max Grow dont work yet
+    'variants': (
+      'ultra-small':  ('font-size': 8px,  'font-weight': 400, 'line-height': 12px,),
+      'very-small':   ('font-size': 10px, 'font-weight': 400, 'line-height': 16px,),
+      'small':        ('font-size': 12px, 'font-weight': 400, 'line-height': 20px,),
+      'default':      ('font-size': 16px, 'font-weight': 400, 'line-height': 24px,),
+      'large':        ('font-size': 20px, 'font-weight': 400, 'line-height': 30px,),
+      'very-large':   ('font-size': 24px, 'font-weight': 400, 'line-height': 36px,),
+      'ultra-large':  ('font-size': 32px, 'font-weight': 400, 'line-height': 46px,),
+    )
+  )
+) !default;
+
+
+:root {
+  @each $type, $typeObject in $typography {
+    @if map.get($typeObject, 'enabled') {
+      @if map.get($typeObject, 'base-classes') or map.get($typeObject, 'base-min-classes') or map.get($typeObject, 'base-max-classes') or map.get($typeObject, 'base-from-to-classes') {
+        @each $variant, $variantObject in map.get($typeObject, 'variants') {
+          --#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rem: #{functions.rem(map.get($variantObject, 'font-size'))};
+          --#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rfs: #{rfs-fluid-value(functions.rem(map.get($variantObject, 'font-size')))};
+          --#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-weight: #{map.get($variantObject, 'font-weight')};
+          --#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-line-height: #{functions.em(map.get($variantObject, 'line-height'), map.get($variantObject, 'font-size'))};
+        }
+      }
+    }
+  }
+}
+
+
+@each $type, $typeObject in $typography {
+
+  // Returns headline / paragraph
+  @if map.get($typeObject, 'enabled') {
+
+    // Headline Styles - Base
+    @if map.get($typeObject, 'base-classes') {
+      @each $variant, $variantObject in map.get($typeObject, 'variants') {
+        @if $type == 'headline' {
+          #{$variant} {
+            font-size: var(--#{$variant}-font-size-rfs);
+            font-weight: var(--#{$variant}-font-weight);
+            line-height: var(--#{$variant}-line-height);
+          }
+        }
+        .typo-#{$variant} {
+          font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rfs) !important;
+          font-weight: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-weight) !important;
+          line-height: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-line-height) !important;
+        }
+      }
+
+      // Stop Grow
+      @include mixins.media-min(#{$rfs-breakpoint}px) {
+        @each $variant, $variantObject in map.get($typeObject, 'variants') {
+          @if $type == 'headline' {
+            #{$variant} {
+              font-size: var(--#{$variant}-font-size-rem);
+            }
+          }
+          .typo-#{$variant} {
+            font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rem) !important;
+          }
+        }
+      }
+    }
+
+    // Headline Styles with Breakpoints - Min
+    @if map.get($typeObject, 'base-min-classes') {
+      @each $breakpoint, $res in variables.$breakpoints {
+        @include mixins.media-min($res) {
+          @each $variant, $variantObject in map.get($typeObject, 'variants') {
+            .typo-#{$variant}-min-#{$breakpoint} {
+              font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rfs) !important;
+              font-weight: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-weight) !important;
+              line-height: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-line-height) !important;
+            }
+          }
+        }
+
+        // Stop Grow
+        @include mixins.media-min(#{$rfs-breakpoint}px) {
+          @each $variant, $variantObject in map.get($typeObject, 'variants') {
+            .typo-#{$variant}-min-#{$breakpoint} {
+              font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rem) !important;
+            }
+          }
+        }
+      }
+    }
+
+    // Headline Styles with Breakpoints - Max
+    @if map.get($typeObject, 'base-max-classes') {
+      @each $breakpoint, $res in variables.$breakpoints {
+        @include mixins.media-max($res) {
+          @each $variant, $variantObject in map.get($typeObject, 'variants') {
+            .typo-#{$variant}-max-#{$breakpoint} {
+              font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rfs) !important;
+              font-weight: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-weight) !important;
+              line-height: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-line-height) !important;
+            }
+          }
+        }
+
+        // Stop Grow
+        @include mixins.media-min(#{$rfs-breakpoint}px) {
+          @each $variant, $variantObject in map.get($typeObject, 'variants') {
+            .typo-#{$variant}-max-#{$breakpoint} {
+              font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rem) !important;
+            }
+          }
+        }
+      }
+    }
+
+    // Headline Styles with Breakpoints - FromTo
+    @if map.get($typeObject, 'base-from-to-classes') {
+      @each $breakpointFrom, $resFrom in variables.$breakpoints {
+        $typo-breakpoint-keys: map-keys(variables.$breakpoints);
+        $iFrom: index($typo-breakpoint-keys, $breakpointFrom);
+
+        @each $breakpointTo, $resTo in variables.$breakpoints {
+          $iTo: index($typo-breakpoint-keys, $breakpointTo);
+
+          @if $iTo > $iFrom {
+            @include mixins.media-from-to($resFrom, $resTo) {
+              @each $variant, $variantObject in map.get($typeObject, 'variants') {
+                .typo-#{$variant}-from-#{$breakpointFrom}-to-#{$breakpointTo} {
+                  font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rfs) !important;
+                  font-weight: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-weight) !important;
+                  line-height: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-line-height) !important;
+                }
+              }
+            }
+
+            // Stop Grow
+            @include mixins.media-min(#{$rfs-breakpoint}px) {
+              @each $variant, $variantObject in map.get($typeObject, 'variants') {
+                .typo-#{$variant}-from-#{$breakpointFrom}-to-#{$breakpointTo} {
+                  font-size: var(--#{if($type == 'paragraph', 'paragraph-', '')}#{$variant}-font-size-rem) !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+}

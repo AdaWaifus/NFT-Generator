@@ -1,0 +1,81 @@
+@mixin inner-space-alignments() {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: auto;
+}
+
+@mixin inner-space() {
+  padding: var(--spacing-xs) var(--spacing-offset);
+  @include media-min($res-sm) {
+    padding: var(--spacing-sm) var(--spacing-offset);
+  }
+  @include media-min($res-md) {
+    padding: var(--spacing-md) var(--spacing-offset);
+  }
+  @include media-min($res-lg) {
+    padding: var(--spacing-lg) var(--spacing-offset);
+  }
+  @include media-min($res-xl) {
+    padding: var(--spacing-xl) var(--spacing-offset);
+  }
+}
+
+@mixin negate-inner-space($var: 'default') {
+  @if ($var == 'default') {
+    padding: 0;
+  }
+  @if ($var == 'vertical') {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  @if ($var == 'horizontal') {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  @if ($var == 'top') {
+    padding-top: 0;
+  }
+  @if ($var == 'right') {
+    padding-right: 0;
+  }
+  @if ($var == 'bottom') {
+    padding-bottom: 0;
+  }
+  @if ($var == 'left') {
+    padding-left: 0;
+  }
+}
+
+@mixin element-space($type: 'margin', $directions...) {
+  @if (length($directions) > 0) {
+    @each $direction in $directions {
+      #{$type}-#{$direction}: var(--spacing-xs);
+      @include media-min($res-sm) {
+        #{$type}-#{$direction}: var(--spacing-sm);
+      }
+      @include media-min($res-md) {
+        #{$type}-#{$direction}: var(--spacing-md);
+      }
+      @include media-min($res-lg) {
+        #{$type}-#{$direction}: var(--spacing-lg);
+      }
+      @include media-min($res-xl) {
+        #{$type}-#{$direction}: var(--spacing-xl);
+      }
+    }
+  } @else {
+    #{$type}: var(--spacing-xs);
+    @include media-min($res-sm) {
+      #{$type}: var(--spacing-sm);
+    }
+    @include media-min($res-md) {
+      #{$type}: var(--spacing-md);
+    }
+    @include media-min($res-lg) {
+      #{$type}: var(--spacing-lg);
+    }
+    @include media-min($res-xl) {
+      #{$type}: var(--spacing-xl);
+    }
+  }
+}
