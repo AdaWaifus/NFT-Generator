@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   EMPTY,
@@ -26,10 +26,10 @@ import {
   IVariant,
   ServerCollection,
 } from './view-gallery.models';
-import {CurrentFilter} from './view-gallery.classes';
-import {HttpClient} from '@angular/common/http';
-import {environment} from 'frontend/src/environments/environment';
-import {filterCollection, mapCollectionFromServer, mapAttributesFromServer} from '../../app.helper';
+import { CurrentFilter } from './view-gallery.classes';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'frontend/src/environments/environment';
+import { filterCollection, mapCollectionFromServer, mapAttributesFromServer } from '../../app.helper';
 
 export interface Summary {
   [key: string]: SummaryProject;
@@ -40,7 +40,7 @@ export interface SummaryProject {
 
 export interface SummarySeason {
   rarity: string;
-  assets: {[key: string]: string};
+  assets: { [key: string]: string };
 }
 
 @Injectable({
@@ -51,7 +51,7 @@ export class ViewGalleryService {
   private _currentFilter = new BehaviorSubject<ICurrentFilter | null>(null);
   private _loadMore = new Subject<boolean>();
   private httpData = this.httpClient.get<Summary>('projects/summary.json').pipe(shareReplay());
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getAssets() {
     const assets = this.httpData;
@@ -59,7 +59,7 @@ export class ViewGalleryService {
     return combineLatest([this._currentFilter.asObservable(), assets]).pipe(
       map(([filter, assets]) => {
         console.log(filter);
-        const result: any = {assets: {}};
+        const result: any = { assets: {} };
         const keys = Object.keys(assets);
         for (const key of keys) {
           if (filter && filter.filterByAttributes && filter.filterByAttributes['Projects']) {
@@ -107,12 +107,13 @@ export class ViewGalleryService {
   get filters() {
     const rarity = this.httpData.pipe(
       mergeMap(summary => {
-        const result = [];
+        const result: any[] = [];
         const keys = Object.keys(summary);
         for (const key of keys) {
           const collectionKeys = Object.keys(summary[key]);
           for (const collectionKey of collectionKeys) {
-            result.push(this.httpClient.get<any>(summary[key][collectionKey].rarity));
+            if (summary[key][collectionKey].rarity)
+              result.push(this.httpClient.get<any>(summary[key][collectionKey].rarity));
           }
         }
         return combineLatest(result).pipe(
