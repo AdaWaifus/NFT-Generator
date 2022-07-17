@@ -60,7 +60,23 @@ hr {
   background-color: rgba(var(--color-accent-rgb), .48);
 }
 
-img {
+button {
+  font-weight: 800 !important;
+  font-family: 'Nunito', sans-serif !important;
+}
+
+img,
+svg,
+video,
+.mark6-image {
+  width: 100%;
   max-width: 100%;
+  height: auto;
   display: block;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
