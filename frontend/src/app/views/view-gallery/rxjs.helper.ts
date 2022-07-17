@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http"
-import { combineLatest, filter, map, Observable, of, switchMap, withLatestFrom } from "rxjs"
+import { combineLatest, filter, map, Observable, of, shareReplay, switchMap, withLatestFrom } from "rxjs"
 import { Asset, CurrentFilter } from "./view-gallery.classes"
 import { ICurrentFilter } from "./view-gallery.models"
 import { Summary } from "./view-gallery.service"
@@ -96,7 +96,7 @@ export const filterByProjectAndCollection =
         );
     })
 
-
+const cache: any = {};
 export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observable<Summary>) => {
     return source.pipe(
         switchMap((summary) => {
@@ -112,7 +112,8 @@ export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observab
                     for (const assetKey of assetKeys) {
                         const imgUrl = assetKey;
                         const jsonUrl = summary[projectKey][collectionKey].assets[assetKey];
-                        const assetMerged = combineLatest([of(imgUrl), httpClient.get(jsonUrl)]).pipe(map(([url, json]) => {
+                        const assetMerged = combineLatest([of(imgUrl), cache[jsonUrl] ? of(cache[jsonUrl]) : httpClient.get(jsonUrl)]).pipe(map(([url, json]) => {
+                            cache[jsonUrl] = json;
                             return new Asset(url, json);
                         }))
                         result.push(assetMerged);
