@@ -39,11 +39,12 @@ export interface SummarySeason {
   providedIn: 'any',
 })
 export class ViewGalleryService {
-  private slice = 0;
+  private slice = 20;
   private _isFiltering = new BehaviorSubject<Boolean>(false);
   private _currentFilter = new BehaviorSubject<ICurrentFilter | null>(null);
   private _loadMore = new Subject<boolean>();
   private httpData = this.httpClient.get<Summary>('projects/summary.json').pipe(shareReplay());
+  private _visiblePct: number = 0;
   constructor(private httpClient: HttpClient) { }
 
   getAssets() {
@@ -52,7 +53,14 @@ export class ViewGalleryService {
       filterByProjectAndCollection(debounceFilter),
       mergeAssetWithJson(this.httpClient),
       filterByAttributes(debounceFilter, this.loadMore),
-      tap(() => this._isFiltering.next(false))
+      tap(() => this._isFiltering.next(false)),
+      tap(() => {
+
+        if (this._visiblePct === 100)
+          setTimeout(() =>
+            this.loadNext(),
+            500)
+      })
     );
     return assets2;
 
@@ -173,11 +181,11 @@ export class ViewGalleryService {
     return this._loadMore.asObservable().pipe(
       switchMap(f => {
         if (f === true) {
-          this.slice += 80;
+          this.slice += 20;
           return of(this.slice);
         } else return EMPTY;
       }),
-      startWith(80)
+      startWith(this.slice)
     );
   }
 
@@ -196,6 +204,9 @@ export class ViewGalleryService {
     this.slice = 0;
     this._loadMore.next(true);
     this.currentFilter.setNumberFilter(number, this._currentFilter);
+  }
+  setVisiblePct(value: number) {
+    this._visiblePct = value;
   }
 
   loadNext() {

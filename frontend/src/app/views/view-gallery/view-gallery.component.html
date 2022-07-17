@@ -5,7 +5,8 @@
       <hr>
       <div class="search" (click)="search.focus()">
         <input #search type="number" placeholder="Search for number..." (input)="onSearchChange($event)">
-        <button *ngIf="search.value; else spacer" (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1">
+        <button *ngIf="search.value; else spacer" (click)="search.value = ''; onSearchChange(null)" mat-icon-button
+          tabIndex="-1">
           <mat-icon svgIcon="close"></mat-icon>
         </button>
       </div>
@@ -28,7 +29,8 @@
         <ng-container *ngIf="_assets.length > 0; else empty">
 
           <div class="images">
-            <button mat-flat-button *ngFor="let item of _assets ; trackBy:trackByNumber; let index = index" (click)="openDetailDialog(item)">
+            <button mat-flat-button *ngFor="let item of _assets ; trackBy:trackByNumber; let index = index"
+              (click)="openDetailDialog(item)">
               <app-image-frame [backgroundColor]="'var(--color-background-darken)'">
                 <img [src]="item.internalUrl | urlEncode" alt="" loading="lazy">
                 <div class="image-footer display-flex flex-column">
@@ -36,15 +38,15 @@
                 </div>
               </app-image-frame>
             </button>
+            <div intersection-observer (visible)="onVisible($event)" (visiblePct)="onVisiblePct($event)"> </div>
 
-            <div intersection-observer (visible)="onVisible($event)"> </div>
           </div>
 
         </ng-container>
       </ng-template>
 
       <ng-template #empty>
-        <div class="images-404">
+        <div class=" images-404">
           {{ 'gallery.no_match' }}
         </div>
       </ng-template>

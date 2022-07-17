@@ -43,10 +43,14 @@ export class ViewGalleryComponent {
   }
 
   onVisible(event: any) {
+    console.log('visible');
     if (event === true)
       this.viewGalleryService.loadNext();
   }
-
+  onVisiblePct(event: number) {
+    console.log('onVisiblePct', event);
+    this.viewGalleryService.setVisiblePct(event);
+  }
   trackByNumber(index: number, item: Asset) {
     return +item.nft.name.substring(11);
   }

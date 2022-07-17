@@ -1,15 +1,18 @@
-import {AfterViewInit, Directive, ElementRef, EventEmitter, OnDestroy, Output} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, EventEmitter, OnDestroy, Output } from '@angular/core';
 
-@Directive({selector: '[intersection-observer]'})
+@Directive({ selector: '[intersection-observer]' })
 export class IntersectionObserverDirective implements AfterViewInit, OnDestroy {
   @Output() visible = new EventEmitter<boolean>();
+  @Output() visiblePct = new EventEmitter<number>();
   private intersectionObserver!: IntersectionObserver;
 
-  constructor(private _elemRef: ElementRef) {}
+  constructor(private _elemRef: ElementRef) { }
 
   intersectionCallback = (entries: any[]) => {
     entries.forEach(entry => {
       const visiblePct = Math.floor(entry.intersectionRatio * 100);
+      console.log('visiblePct', visiblePct);
+      this.visiblePct.emit(visiblePct);
       if (visiblePct > 0) {
         this.visible.emit(true);
       } else {
@@ -22,7 +25,7 @@ export class IntersectionObserverDirective implements AfterViewInit, OnDestroy {
     // Options for the observers
     const observerOptions = {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '20px',
       threshold: [0.0, 0.1],
     };
     this.intersectionObserver = new IntersectionObserver(this.intersectionCallback, observerOptions);
