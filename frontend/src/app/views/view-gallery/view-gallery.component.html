@@ -28,8 +28,7 @@
       <hr>
       <div class="search" (click)="search.focus()">
         <input #search type="number" placeholder="Search for number..." (input)="onSearchChange($event)">
-        <button (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1"
-          *ngIf="search.value; else spacer">
+        <button *ngIf="search.value; else spacer" (click)="search.value = ''; onSearchChange(null)" mat-icon-button tabIndex="-1">
           <mat-icon svgIcon="close"></mat-icon>
         </button>
       </div>
@@ -47,9 +46,8 @@
       <ng-container *ngIf="assets | async as col">
         <ng-container *ngIf="(col.assets | toObjectKeys).length > 0; else empty">
           <div class="images">
-            <button mat-flat-button *ngFor="let item of col.assets | toObjectKeys; let index = index"
-              (click)="openDetailDialog(item)">
-              <img [src]="item | urlEncode" alt="">
+            <button mat-flat-button *ngFor="let item of col.assets | toObjectKeys; let index = index" (click)="openDetailDialog(item)">
+              <img [src]="item | urlEncode" alt="">
               <div class="image-footer display-flex flex-column">
                 <span class="typo-small font-weight-800 text-align-center">{{ item | slice: 10 }}</span>
               </div>

@@ -5,12 +5,14 @@ import { CurrentFilter } from "./view-gallery.classes";
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'frontend/src/environments/environment';
 import { filterCollection, mapCollectionFromServer, mapAttributesFromServer } from '../../app.helper';
+
 export interface Summary {
   [key: string]: SummaryProject;
 }
 export interface SummaryProject {
   [key: string]: SummarySeason;
 }
+
 export interface SummarySeason {
   rarity: string;
   assets: { [key: string]: string };
@@ -38,9 +40,7 @@ export class ViewGalleryService {
           const projectFilterKeys = Object.keys(filter.filterByAttributes['Projects']);
           if (projectFilterKeys.length > 0 && projectFilterKeys.indexOf(key) === -1)
             continue;
-
         }
-
 
         const collectionKeys = Object.keys(assets[key]);
         for (const collectionKey of collectionKeys) {
@@ -69,6 +69,7 @@ export class ViewGalleryService {
       return Object.keys(d[project]);
     })))
   }
+
   get projects() {
     return this.httpData.pipe((map(d => {
       return Object.keys(d);
@@ -156,10 +157,7 @@ export class ViewGalleryService {
       result.push(...pc, ...r);
       return result;
     }))
-
   }
-
-
 
   get filter() {
     return this._currentFilter.asObservable();
