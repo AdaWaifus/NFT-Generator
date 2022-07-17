@@ -105,3 +105,16 @@ main {
     }
   }
 }
+
+.spinner {
+  min-width: calc(100vw - (24px * 2));
+  min-height: calc(100vh - (64px * 2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mat-spinner {
+    ::ng-deep circle {
+      stroke: var(--color-accent);
+    }
+  }
+}

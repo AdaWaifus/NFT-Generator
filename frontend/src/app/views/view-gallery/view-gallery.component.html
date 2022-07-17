@@ -1,27 +1,4 @@
 <div class="content">
-  <!-- <div *ngIf="projects | async as _projects">
-    <div>
-      <h2>Select your project</h2>
-    </div>
-    <div *ngFor="let p of _projects" (click)="selectProject(p)">
-      <pre>{{p}}</pre>
-    </div>
-
-
-  </div>
-  <div></div>
-
-  <div *ngIf="collections | async as _collections">
-    <div>
-      <h2>Select your collection</h2>
-    </div>
-    <div *ngFor="let c of _collections" (click)="selectCollection(c)">
-      <pre>{{c}}</pre>
-    </div>
-
-
-  </div>
-  <div></div> -->
   <ng-container *ngIf="assets | async as _assets; else loading">
     <aside>
       <h2 class="no-margin typo-h4">Filter</h2>
@@ -59,9 +36,10 @@
                 </div>
               </app-image-frame>
             </button>
-            <div intersection-observer (visible)="onVisible($event)"> </div>
 
+            <div intersection-observer (visible)="onVisible($event)"> </div>
           </div>
+
         </ng-container>
       </ng-template>
 
@@ -73,8 +51,11 @@
 
     </main>
   </ng-container>
+
   <ng-template #loading>
-    LOADING
+    <div class="spinner">
+      <mat-spinner></mat-spinner>
+    </div>
   </ng-template>
 </div>
 
