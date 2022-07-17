@@ -10,7 +10,9 @@ import {
   debounceTime,
   shareReplay,
   tap,
-  mergeMap
+  mergeMap,
+  startWith,
+  empty
 } from 'rxjs';
 import {
   AttributeFilter,
@@ -45,11 +47,11 @@ export class ViewGalleryService {
   constructor(private httpClient: HttpClient) { }
 
   getAssets() {
-
+    const debounceFilter = this._currentFilter.asObservable().pipe(debounceTime(500))
     const assets2 = this.httpData.pipe(
-      filterByProjectAndCollection(this._currentFilter.asObservable().pipe(debounceTime(1500))),
+      filterByProjectAndCollection(debounceFilter),
       mergeAssetWithJson(this.httpClient),
-      filterByAttributes(this._currentFilter.asObservable().pipe(debounceTime(1500))),
+      filterByAttributes(debounceFilter, this.loadMore),
       tap(() => this._isFiltering.next(false))
     );
     return assets2;
@@ -171,10 +173,11 @@ export class ViewGalleryService {
     return this._loadMore.asObservable().pipe(
       switchMap(f => {
         if (f === true) {
-          this.slice += 20;
+          this.slice += 80;
           return of(this.slice);
         } else return EMPTY;
       }),
+      startWith(80)
     );
   }
 

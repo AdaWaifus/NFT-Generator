@@ -58,6 +58,8 @@
                 <span class="typo-small font-weight-800 text-align-center">{{ item.nft.name | slice: 10 }}</span>
               </div>
             </button>
+            <div intersection-observer (visible)="onVisible($event)"> </div>
+
           </div>
         </ng-container>
       </ng-template>
