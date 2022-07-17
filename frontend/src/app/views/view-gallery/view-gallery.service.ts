@@ -128,19 +128,27 @@ export class ViewGalleryService {
             }, {}),
           ),
           map(a => {
+            console.log('map a', a)
             const result: IAttributes[] = [];
             const keys = Object.keys(a);
             for (const key of keys) {
               const attr = a[key];
+              const mergedVariants: any[] = [];
+              for (const variant of attr) {
+                const existingVariant = mergedVariants.find(a => a.name === variant.attributeValue);
+                if (existingVariant)
+                  existingVariant.count += variant.count;
+                else
+                  mergedVariants.push({
+                    name: variant.attributeValue,
+                    count: variant.count,
+                  })
+
+              }
               result.push({
                 title: key,
                 totalFilters: 0,
-                variants: attr.map((aa: any) => {
-                  return {
-                    name: aa.attributeValue,
-                    count: aa.count,
-                  };
-                }),
+                variants: mergedVariants
               });
             }
             return result;

@@ -37,8 +37,6 @@ export class ProjectsSummary {
   async generate(projectCollectionSummary: ProjectCollectionSummary) {
     const result = this.#projectCollectionSummaryImport;
     const projects = mapArrayToRelativePath(Object.keys(projectCollectionSummary))
-    console.log('result', result);
-    console.log('projectCollectionSummary', projectCollectionSummary);
 
     projects.forEach(project => {
       const projectInTemplate = Object.keys(this.#projectCollectionSummaryTemplate).includes(project);
@@ -47,8 +45,6 @@ export class ProjectsSummary {
         const projectsObj = projectCollectionSummary[project];
         const projectCollections = Object.keys(projectsObj);
         projectCollections.forEach(projectCollection => {
-          console.log('this#', this.#projectCollectionSummaryTemplate);
-          console.log('thisresult', result);
           const collectionInTemplate = Object.keys(this.#projectCollectionSummaryTemplate[project]).includes(
             projectCollection
           );
