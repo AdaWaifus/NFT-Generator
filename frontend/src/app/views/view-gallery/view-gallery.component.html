@@ -47,10 +47,12 @@
         <ng-container *ngIf="(col.assets | toObjectKeys).length > 0; else empty">
           <div class="images">
             <button mat-flat-button *ngFor="let item of col.assets | toObjectKeys; let index = index" (click)="openDetailDialog(item)">
-              <img [src]="item | urlEncode" alt="">
-              <div class="image-footer display-flex flex-column">
-                <span class="typo-small font-weight-800 text-align-center">{{ item | slice: 10 }}</span>
-              </div>
+              <app-image-frame [backgroundColor]="'var(--color-background-darken)'">
+                <img [src]="item | urlEncode" alt="" loading="lazy">
+                <div class="image-footer display-flex flex-column">
+                  <span class="typo-small font-weight-800 text-align-center">{{ item | slice: 10 }}</span>
+                </div>
+              </app-image-frame>
             </button>
           </div>
         </ng-container>
@@ -61,6 +63,8 @@
           </div>
         </ng-template>
       </ng-container>
+
+      <div intersection-observer (visible)="onVisible($event)"> </div>
 
     </main>
   </ng-container>

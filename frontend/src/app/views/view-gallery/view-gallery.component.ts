@@ -41,6 +41,11 @@ export class ViewGalleryComponent {
     this.viewGalleryService.setNumberFilter(+(event.target as HTMLInputElement).value);
   }
 
+  onVisible(event: any) {
+    if (event === true)
+      this.viewGalleryService.loadNext();
+  }
+
   selectProject(project: string) {
     this.selectedProject = project;
     this.collections = this.viewGalleryService.getCollections(project);

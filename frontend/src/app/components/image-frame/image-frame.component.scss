@@ -1,0 +1,19 @@
+@use '../../scss-elements/variables';
+@use '../../scss-elements/mixins';
+
+:host {
+  padding: 16px;
+  display: block;
+  border-radius: 16px;
+  background-color: var(--color-primary-500);
+  box-shadow: 8px 8px 0 #00000014;
+
+  ::ng-deep {
+    img {
+      border-radius: 16px;
+    }
+
+    p {
+    }
+  }
+}

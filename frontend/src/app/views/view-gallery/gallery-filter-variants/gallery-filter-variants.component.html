@@ -1,5 +1,5 @@
 <div class="search" (click)="search.focus()">
-    <input #search type="text" [placeholder]="'common.suche'" (input)="onSearchChange($event)">
+    <input #search type="text" placeholder="Search..." (input)="onSearchChange($event)">
     <button mat-icon-button tabIndex="-1" *ngIf="search.value; else spacer" (click)="search.value = ''; searchValue=''">
         <mat-icon svgIcon="close"></mat-icon>
     </button>

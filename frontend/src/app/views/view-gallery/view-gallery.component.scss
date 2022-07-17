@@ -1,26 +1,8 @@
 :host {
   display: flex;
   position: relative;
-}
 
-.content {
-  width: 100%;
-  max-width: 1600px;
-  padding: 64px 24px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 420px auto;
-}
-
-aside {
-  // height: fit-content;
-  // top: 148px;
-  // position: sticky;
-  gap: 24px;
-  display: flex;
-  flex-direction: column;
-
-  .search {
+  ::ng-deep .search {
     width: auto;
     padding: 8px 8px 8px 16px;
     border-radius: 4px;
@@ -39,6 +21,8 @@ aside {
       padding: 0;
       border: none;
       color: var(--text-color);
+      font-weight: 800 !important;
+      font-family: 'Nunito', sans-serif;
       background-color: transparent;
 
       &::-webkit-outer-spin-button,
@@ -56,6 +40,24 @@ aside {
       }
     }
   }
+}
+
+.content {
+  width: 100%;
+  max-width: 1600px;
+  padding: 64px 24px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 420px auto;
+}
+
+aside {
+  // height: fit-content;
+  // top: 148px;
+  // position: sticky;
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
 }
 
 main {
