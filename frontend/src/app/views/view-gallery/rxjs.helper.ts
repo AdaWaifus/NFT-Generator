@@ -1,18 +1,26 @@
 import { HttpClient } from "@angular/common/http"
-import { combineLatest, filter, map, Observable, of, shareReplay, switchMap, withLatestFrom } from "rxjs"
+import { combineLatest, filter, map, Observable, of, shareReplay, startWith, switchMap, withLatestFrom } from "rxjs"
 import { Asset, CurrentFilter } from "./view-gallery.classes"
-import { ICurrentFilter } from "./view-gallery.models"
+import { IAttributes, ICurrentFilter } from "./view-gallery.models"
 import { Summary } from "./view-gallery.service"
 function sortByNumber(a: Asset, b: Asset) {
     const aN = +a.nft.name.substring(11);
     const bN = +b.nft.name.substring(11);
     return aN - bN;
 }
+
+let _assets: Asset[] = [];
+export const assetsInCache = () => _assets;
+export const setAssetsInCache = (assets: Asset[]) => {
+    _assets = assets;
+}
+
 export const filterByAttributes = (currentFilter: Observable<ICurrentFilter | null>, loadMore: Observable<number>) =>
 ((source: Observable<Asset[]>) => {
 
-
+    console.log('filterByAttributes');
     return combineLatest([currentFilter, source, loadMore]).pipe(map(([filter, assets, slice]) => {
+        console.log('combinelatest', assets);
         if (!!!filter) return assets.sort(sortByNumber).slice(0, slice);
 
 
@@ -129,3 +137,31 @@ export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observab
         })
     )
 })
+
+export const getFiltersFromAttributes = (source: Observable<any>) => source.pipe(map(() => _assets),
+    map((assets: Asset[]) => {
+        const result: IAttributes[] = [];
+
+        for (const asset of assets) {
+            const attributesKeys = Object.keys(asset.nft.attributes);
+            for (const attributesKey of attributesKeys) {
+                const iAttribute = result.find(a => a.title === attributesKey);
+                const nftAttribute = asset.nft.attributes[attributesKey];
+
+                if (iAttribute) {
+                    const iVariant = iAttribute.variants.find(a => a.name === nftAttribute);
+                    if (iVariant)
+                        iVariant.count++;
+                    else
+                        iAttribute.variants.push({ name: nftAttribute, count: 1 })
+                } else {
+                    result.push({ title: attributesKey, variants: [{ name: nftAttribute, count: 1 }], totalFilters: 0 })
+                }
+            }
+
+        }
+
+        return result;
+    })
+)
+

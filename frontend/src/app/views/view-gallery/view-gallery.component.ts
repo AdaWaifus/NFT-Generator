@@ -15,8 +15,10 @@ export class ViewGalleryComponent {
   public assets?: Observable<Asset[]>;
   public filters?: Observable<IAttributes[]>;
   public isFiltering: Observable<Boolean>;
+  public isLoadingAssets: Observable<Boolean>;
 
   constructor(public viewGalleryService: ViewGalleryService, private matDialog: MatDialog) {
+    this.isLoadingAssets = viewGalleryService.isLoadingAssets;
     this.filters = viewGalleryService.filters;
     this.assets = this.viewGalleryService.getAssets();
     this.isFiltering = this.viewGalleryService.isFiltering;
@@ -43,12 +45,10 @@ export class ViewGalleryComponent {
   }
 
   onVisible(event: any) {
-    console.log('visible');
     if (event === true)
       this.viewGalleryService.loadNext();
   }
   onVisiblePct(event: number) {
-    console.log('onVisiblePct', event);
     this.viewGalleryService.setVisiblePct(event);
   }
   trackByNumber(index: number, item: Asset) {

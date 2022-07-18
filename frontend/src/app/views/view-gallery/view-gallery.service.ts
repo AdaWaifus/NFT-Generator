@@ -6,13 +6,11 @@ import {
   of,
   Subject,
   switchMap,
-  combineLatest,
   debounceTime,
-  shareReplay,
   tap,
-  mergeMap,
   startWith,
-  empty
+  take,
+  distinctUntilChanged
 } from 'rxjs';
 import {
   AttributeFilter,
@@ -22,7 +20,7 @@ import {
 } from './view-gallery.models';
 import { CurrentFilter } from './view-gallery.classes';
 import { HttpClient } from '@angular/common/http';
-import { filterByProjectAndCollection, mergeAssetWithJson, filterByAttributes } from './rxjs.helper';
+import { getFiltersFromAttributes, mergeAssetWithJson, filterByAttributes, setAssetsInCache, assetsInCache } from './rxjs.helper';
 export interface Summary {
   [key: string]: SummaryProject;
 }
@@ -40,18 +38,30 @@ export interface SummarySeason {
 })
 export class ViewGalleryService {
   private slice = 20;
+  private _isLoadingAssets = new BehaviorSubject<Boolean>(false);
   private _isFiltering = new BehaviorSubject<Boolean>(false);
   private _currentFilter = new BehaviorSubject<ICurrentFilter | null>(null);
   private _loadMore = new Subject<boolean>();
-  private httpData = this.httpClient.get<Summary>('projects/summary.json').pipe(shareReplay());
+  private httpData = this.httpClient.get<Summary>('projects/summary.json');
   private _visiblePct: number = 0;
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) { this.loadAssets() }
 
+  get isLoadingAssets() {
+    return this._isLoadingAssets.asObservable();
+  }
+  loadAssets() {
+    this._isLoadingAssets.next(true);
+    this.httpData.pipe(mergeAssetWithJson(this.httpClient), take(1)
+    ).subscribe((assets) => {
+      setAssetsInCache(assets);
+      this._isLoadingAssets.next(false);
+      this._isLoadingAssets.complete();
+    })
+  }
   getAssets() {
     const debounceFilter = this._currentFilter.asObservable().pipe(debounceTime(500))
-    const assets2 = this.httpData.pipe(
-      filterByProjectAndCollection(debounceFilter),
-      mergeAssetWithJson(this.httpClient),
+    const assets2 = of(EMPTY).pipe(
+      map(() => assetsInCache()),
       filterByAttributes(debounceFilter, this.loadMore),
       tap(() => this._isFiltering.next(false)),
       tap(() => {
@@ -60,7 +70,8 @@ export class ViewGalleryService {
           setTimeout(() =>
             this.loadNext(),
             500)
-      })
+      }),
+      distinctUntilChanged()
     );
     return assets2;
 
@@ -73,104 +84,9 @@ export class ViewGalleryService {
   }
 
   get filters() {
-    const rarity = this.httpData.pipe(
-      mergeMap(summary => {
-        const result: any[] = [];
-        const keys = Object.keys(summary);
-        for (const key of keys) {
-          const collectionKeys = Object.keys(summary[key]);
-          for (const collectionKey of collectionKeys) {
-            if (summary[key][collectionKey].rarity)
-              result.push(this.httpClient.get<any>(summary[key][collectionKey].rarity));
-          }
-        }
-        return combineLatest(result).pipe(
-          map(a =>
-            a.reduce((prev, current) => {
-              const keys = Object.keys(current);
-              for (const key of keys) {
-                if (!!!prev[key]) prev[key] = [];
-                prev[key].push(...current[key]);
-              }
-              return prev;
-            }, {}),
-          ),
-          map(a => {
-            const result: IAttributes[] = [];
-            const keys = Object.keys(a);
-            for (const key of keys) {
-              const attr = a[key];
-              const mergedVariants: any[] = [];
-              for (const variant of attr) {
-                const existingVariant = mergedVariants.find(a => a.name === variant.attributeValue);
-                if (existingVariant)
-                  existingVariant.count += variant.count;
-                else
-                  mergedVariants.push({
-                    name: variant.attributeValue,
-                    count: variant.count,
-                  })
-
-              }
-              result.push({
-                title: key,
-                totalFilters: 0,
-                variants: mergedVariants
-              });
-            }
-            return result;
-          }),
-        );
-      }),
-    );
-
-    const projectAndCollection = this.httpData.pipe(
-      map(summary => {
-        const keys = Object.keys(summary);
-
-        const result: IAttributes[] = [
-          {
-            title: 'projects',
-            totalFilters: 0,
-            variants: keys.map(p => {
-              const v: IVariant = {
-                name: p,
-                count: Object.keys(summary[p]).reduce<number>((prev, current) => {
-                  prev += Object.keys(summary[p][current].assets).length;
-                  return prev;
-                }, 0),
-              };
-              return v;
-            }),
-          },
-          {
-            title: 'collections',
-            totalFilters: 0,
-            variants: keys.reduce<Array<IVariant>>((prev, p) => {
-              prev.push(
-                ...Object.keys(summary[p]).map(col => {
-                  const v: IVariant = {
-                    name: col,
-                    count: Object.keys(summary[p][col].assets).length,
-                  };
-                  return v;
-                }),
-              );
-              return prev;
-            }, []),
-          },
-        ];
-        return result;
-      }),
-    );
-
-    return combineLatest([rarity, projectAndCollection]).pipe(
-      map(([r, pc]) => {
-        const result = [];
-        result.push(...pc, ...r);
-        return result;
-      }),
-    );
+    return of(EMPTY).pipe(
+      getFiltersFromAttributes
+    )
   }
 
   get filter() {

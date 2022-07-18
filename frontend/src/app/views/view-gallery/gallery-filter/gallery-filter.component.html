@@ -10,9 +10,7 @@
       <mat-icon *ngIf="!panel.expanded" svgIcon="add"></mat-icon>
     </mat-expansion-panel-header>
 
-    <app-gallery-filter-variants [variants]="attribute.variants"
-                                 (totalFiltersChange)="attribute.totalFilters=$event"
-                                 (filterChange)="onChangeFilter(attribute.title,$event)"></app-gallery-filter-variants>
-
+    <app-gallery-filter-variants [variants]="attribute.variants" (totalFiltersChange)="attribute.totalFilters=$event"
+      (filterChange)="onChangeFilter(attribute.title,$event)"></app-gallery-filter-variants>
   </mat-expansion-panel>
 </mat-accordion>

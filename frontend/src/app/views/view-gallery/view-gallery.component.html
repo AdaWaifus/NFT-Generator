@@ -1,4 +1,70 @@
 <div class="content">
+  <ng-container *ngIf="isLoadingAssets | async as _isLoading;else content">
+    Loading all the assets please wait
+  </ng-container>
+  <ng-template #content>
+    <ng-container *ngIf="assets | async as _assets;">
+      <aside>
+        <h2 class="no-margin typo-h4">Filter</h2>
+        <hr>
+        <div class="search" (click)="search.focus()">
+          <input #search type="number" placeholder="Search for number..." (input)="onSearchChange($event)">
+          <button *ngIf="search.value; else spacer" (click)="search.value = ''; onSearchChange(null)" mat-icon-button
+            tabIndex="-1">
+            <mat-icon svgIcon="close"></mat-icon>
+          </button>
+        </div>
+        <app-gallery-filter [attributes]="(filters | async)!" (filterChange)="filterChange($event)">
+        </app-gallery-filter>
+      </aside>
+
+      <main>
+        <div class="display-flex">
+          <h2 class="no-margin typo-h4">Gallery</h2>
+          <div style="flex: 1 1 auto;"></div>
+        </div>
+
+        <hr>
+
+        <ng-container *ngIf="isFiltering | async as _isFiltering; else filteringDone">
+          Filtering. ..... . . .
+        </ng-container>
+
+        <ng-template #filteringDone>
+          <ng-container *ngIf="_assets.length > 0; else empty">
+
+            <div class="images">
+              <button mat-flat-button *ngFor="let item of _assets ; trackBy:trackByNumber; let index = index"
+                (click)="openDetailDialog(item)">
+                <app-image-frame [backgroundColor]="'var(--color-background-darken)'">
+                  <img [src]="item.internalUrl | urlEncode" alt="" loading="lazy">
+                  <div class="image-footer display-flex flex-column">
+                    <span class="typo-small font-weight-800 text-align-center">{{ item.nft.name | slice: 10 }}</span>
+                  </div>
+                </app-image-frame>
+              </button>
+              <div intersection-observer (visible)="onVisible($event)" (visiblePct)="onVisiblePct($event)"> </div>
+
+            </div>
+
+          </ng-container>
+        </ng-template>
+
+        <ng-template #empty>
+          <div class=" images-404">
+            {{ 'gallery.no_match' }}
+          </div>
+        </ng-template>
+
+      </main>
+    </ng-container>
+  </ng-template>
+</div>
+
+<ng-template #spacer>
+  <div style="width: 32px; height: 32px"></div>
+</ng-template>
+<!-- <div class="content">
   <ng-container *ngIf="assets | async as _assets; else loading">
     <aside>
       <h2 class="no-margin typo-h4">Filter</h2>
@@ -63,4 +129,4 @@
 
 <ng-template #spacer>
   <div style="width: 32px; height: 32px"></div>
-</ng-template>
+</ng-template> -->

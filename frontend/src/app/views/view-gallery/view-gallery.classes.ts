@@ -92,7 +92,7 @@ export class CurrentFilter implements ICurrentFilter {
   }
 
   setAttributeFilter(attributeFilter: AttributeFilter, subject: BehaviorSubject<ICurrentFilter | null>) {
-    const attributeName = camelize(attributeFilter.attributeName);
+    const attributeName = attributeFilter.attributeName;
     if (!attributeFilter.value) {
       delete this.filterByAttributes![attributeName][attributeFilter.variant];
       subject.next(this);
