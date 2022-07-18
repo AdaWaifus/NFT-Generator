@@ -1,33 +1,72 @@
+@use '../../../../scss/scss-elements/variables';
+@use '../../../../scss/scss-elements/mixins';
+
 :host {
   height: 100%;
   display: grid;
   position: relative;
-  grid-template-rows: 1fr;
-  grid-template-areas: 'content';
+  grid-template-columns: 1fr;
+  @include mixins.media-max(variables.$res-sm) {
+    grid-template-rows: 1fr 56px;
+    grid-template-areas: 'content' 'footer';
+  }
+  @include mixins.media-min(variables.$res-sm) {
+    grid-template-rows: 1fr;
+    grid-template-areas: 'content';
+  }
 }
 
 .content-wrapper {
   grid-area: content;
   overflow: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  @include mixins.media-min(variables.$res-md) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 
   img {
-    width: 512px;
+    @include mixins.media-min(variables.$res-md) {
+      width: 512px;
+    }
+    @include mixins.media-min(variables.$res-xl) {
+      width: 768px;
+    }
   }
 
   .content {
-    padding: 86px;
+    @include mixins.media-min(variables.$res-md) {
+      padding: 24px;
+    }
+    @include mixins.media-min(variables.$res-lg) {
+      padding: 32px;
+    }
+    @include mixins.media-min(variables.$res-xl) {
+      padding: 86px;
+    }
 
     h1, h2, h3, h4, h5, h6 {
-      margin-bottom: 86px;
+      @include mixins.media-min(variables.$res-md) {
+        margin-top: 0;
+      }
+      @include mixins.media-min(variables.$res-xl) {
+        margin-bottom: 86px;
+      }
     }
   }
 
   ul {
     gap: 8px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    @include mixins.media-max(variables.$res-md) {
+      padding: 0 8px 8px 8px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include mixins.media-min(variables.$res-md) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @include mixins.media-min(variables.$res-lg) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
     li {
       padding: 8px 12px;
@@ -42,15 +81,21 @@
 }
 
 .footer {
-  width: 100%;
-  padding: 8px;
+  padding: 0 8px;
   grid-area: footer;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  top: 0;
-  right: 0;
-  position: absolute;
+  @include mixins.media-max(variables.$res-sm) {
+    box-shadow: var(--elevation-04);
+  }
+  @include mixins.media-min(variables.$res-sm) {
+    width: 100%;
+    padding: 8px;
+    top: 0;
+    right: 0;
+    position: absolute;
+  }
 
   button {
     color: var(--color-accent);

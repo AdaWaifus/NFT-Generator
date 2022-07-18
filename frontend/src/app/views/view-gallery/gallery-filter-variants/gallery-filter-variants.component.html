@@ -10,7 +10,9 @@
                   [checked]="this.selectedValues.indexOf(variant.name)> -1"
                   (change)="changeFilter(variant.name,$event.checked)">
         <span class="typo-small">{{variant.name}}</span>
-        <span class="typo-small" style="opacity: .4;"> ({{variant.count}})</span>
+        <span class="typo-small" style="opacity: .4;">&nbsp;({{variant.count}})</span>
+        <span style="flex: 1 1 auto"></span>
+        <span class="typo-small" style="opacity: .4;">Rarity (0%)</span>
     </mat-checkbox>
 </div>
 

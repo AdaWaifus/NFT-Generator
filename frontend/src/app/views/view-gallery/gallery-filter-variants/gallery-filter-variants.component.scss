@@ -22,17 +22,26 @@
   }
 
   .mat-checkbox {
+    padding: 4px 0;
     font: inherit;
+
+    ::ng-deep label.mat-checkbox-layout {
+      align-items: center;
+    }
 
     ::ng-deep .mat-checkbox-frame {
       border-color: var(--text-color);
     }
 
     ::ng-deep .mat-checkbox-label {
-      margin-bottom: 3px;
+      width: 100%;
+      padding: 0 12px 0 0;
+      display: flex;
     }
 
-    ::ng-deep .mat-ripple { display: none; }
+    ::ng-deep .mat-ripple {
+      display: none;
+    }
 
     &.mat-checkbox-checked.mat-accent {
       color: var(--color-accent);
