@@ -120,8 +120,7 @@ export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observab
                     for (const assetKey of assetKeys) {
                         const imgUrl = assetKey;
                         const jsonUrl = summary[projectKey][collectionKey].assets[assetKey];
-                        const assetMerged = combineLatest([of(imgUrl), cache[jsonUrl] ? of(cache[jsonUrl]) : httpClient.get(jsonUrl)]).pipe(map(([url, json]) => {
-                            cache[jsonUrl] = json;
+                        const assetMerged = combineLatest([of(imgUrl), httpClient.get(jsonUrl)]).pipe(map(([url, json]) => {
                             return new Asset(url, json);
                         }))
                         result.push(assetMerged);
