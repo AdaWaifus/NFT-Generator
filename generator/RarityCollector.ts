@@ -3,7 +3,7 @@ import {readdir, writeFile} from 'fs/promises';
 import {Config} from './Config';
 import {normalizePath, getAttributeKeyValuePairs} from './utils';
 
-interface RarityEntry {
+export interface RarityEntry {
   attributeValue: string;
   count: number;
   percent: number;
@@ -16,7 +16,7 @@ export class RarityCollector {
     this.#config = config;
   }
 
-  async collect(): Promise<string> {
+  async collect(): Promise<[string, Record<string, RarityEntry[]>]> {
     const {amount, assets, schema, rarityCollection} = this.#config;
     const {outputPath: schemaOutputPath, attributesKey} = schema;
     const {images, order} = assets;
@@ -65,10 +65,10 @@ export class RarityCollector {
 
       console.log(`Rarity collected in: ${outputPath}`);
       await writeFile(outputPath, JSON.stringify(result, null, 2));
-      return outputPath;
+      return [outputPath, result];
     } else {
       console.log(`Nothing to collect.`);
-      return '';
+      return ['', {}];
     }
   }
 }

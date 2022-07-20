@@ -1,14 +1,16 @@
-import { basename } from 'path';
-import { CLI } from './CLI';
-import { Config } from './Config';
-import { NFTStorageUpload } from './NFTStorage';
-import { Generator, ImageSchemaMap } from './Generator';
-import { RarityCollector } from './RarityCollector';
-import { PreviewAnimation } from './PreviewAnimation';
+import {basename} from 'path';
+import Table from 'cli-table';
+import clc from 'cli-color';
+import {CLI} from './CLI';
+import {Config} from './Config';
+import {NFTStorageUpload} from './NFTStorage';
+import {Generator, ImageSchemaMap} from './Generator';
+import {RarityCollector} from './RarityCollector';
+import {PreviewAnimation} from './PreviewAnimation';
 
-import { projectsGlob, projectsSummary, nftStorageApiKey } from '../generator.json';
-import { ProjectsSummary } from './ProjectsSummary';
-import { mapToRelativePath } from './utils';
+import {projectsGlob, projectsSummary, nftStorageApiKey} from '../generator.json';
+import {ProjectsSummary} from './ProjectsSummary';
+import {mapToRelativePath} from './utils';
 
 export type ProjectCollectionSummary = {
   [projectPath: string]: {
@@ -25,7 +27,7 @@ const addToProjectCollectionSummary = (
   summary: ProjectCollectionSummary,
   projectPath: string,
   configPath: string,
-  insert: string | { [imagePath: string]: string },
+  insert: string | {[imagePath: string]: string},
 ) => {
   const _projectPath = mapToRelativePath(projectPath);
   const _configPath = mapToRelativePath(configPath);
@@ -85,7 +87,35 @@ const main = async () => {
       console.log(`===========================================`);
 
       const collector = new RarityCollector(config);
-      const rarityCollectionPath = await collector.collect();
+      const [rarityCollectionPath, rarityCollection] = await collector.collect();
+
+      if (isRarityCollection) {
+        const layers = Object.keys(rarityCollection);
+        var table = new Table({
+          head: ['Layer', 'Attribute', 'Amount', 'Rarity %'],
+        });
+
+        layers.forEach(layer => {
+          const rarityEntries = rarityCollection[layer];
+
+          rarityEntries.forEach((rarityEntry, i) => {
+            const {attributeValue, count, percent} = rarityEntry;
+            let countColor = count === 0 ? clc.bgRed : clc;
+            let percentColor = percent < 5 ? clc.bold.black.bgCyanBright : clc;
+            percentColor = percent < 1 ? clc.bold.black.bgYellowBright : percentColor;
+            percentColor = percent === 0 ? clc.bold.black.bgRed : percentColor;
+
+            table.push({
+              [i === 0 ? layer : '']: [
+                attributeValue,
+                countColor(` ${count} `),
+                percentColor(` ${percent}% `),
+              ],
+            });
+          });
+        });
+        console.log(table.toString());
+      }
 
       addToProjectCollectionSummary(projectCollectionSummary, projectPath, configPath, rarityCollectionPath);
     }
@@ -93,19 +123,18 @@ const main = async () => {
 
   const summary = new ProjectsSummary(projectsGlob, projectsSummary);
   await summary.generate(projectCollectionSummary);
-  /*
-    if (isPreviewAnimation || isBuild) {
-      for (let i = 0; i < configs.length; i++) {
-        const config = configs[i];
-        const configPath = configPaths[i];
-        console.log(`===========================================`);
-        console.log(`Preview Animation ${basename(configPath)}:`);
-        console.log(`===========================================`);
-  
-        const previewAnimation = new PreviewAnimation(config);
-        await previewAnimation.generate();
-      }
-    }*/
+  if (isPreviewAnimation) {
+    for (let i = 0; i < configs.length; i++) {
+      const config = configs[i];
+      const configPath = configPaths[i];
+      console.log(`===========================================`);
+      console.log(`Preview Animation ${basename(configPath)}:`);
+      console.log(`===========================================`);
+
+      const previewAnimation = new PreviewAnimation(config);
+      await previewAnimation.generate();
+    }
+  }
 };
 
 main();
