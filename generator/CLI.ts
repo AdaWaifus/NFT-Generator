@@ -9,7 +9,7 @@ export const CLI = async (projectsGlob: string) => {
       type: 'list',
       name: 'action',
       message: 'Please select your action:',
-      choices: ['build', 'collect rarity', 'preview animation'],
+      choices: ['build', 'collect rarity', 'preview animation', 'ipfs upload'],
     },
     {
       type: 'list',
@@ -43,13 +43,6 @@ export const CLI = async (projectsGlob: string) => {
       name: 'batchSize',
       message: 'Please select the batch size:',
       default: 1,
-      when: (answers: inquirer.Answers) => answers['action'] === 'build' && answers['configPaths'].length > 0,
-    },
-    {
-      type: 'confirm',
-      name: 'upload',
-      message: 'Do you wanna upload the images? (default: No)',
-      default: false,
       when: (answers: inquirer.Answers) => answers['action'] === 'build' && answers['configPaths'].length > 0,
     },
   ]);

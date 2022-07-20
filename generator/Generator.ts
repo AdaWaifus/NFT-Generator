@@ -39,15 +39,13 @@ const checkImageValidaity = async (images: string[]) => {
 
 export class Generator {
   readonly #config: Config;
-  readonly #nftStorageUpload: NFTStorageUpload | undefined;
   #imageGenerator: ImageGenerator;
   #schemaGenerator: SchemaGenerator;
 
-  constructor(config: Config, nftStorageUpload?: NFTStorageUpload) {
+  constructor(config: Config) {
     this.#config = config;
     this.#imageGenerator = new ImageGenerator(config);
     this.#schemaGenerator = new SchemaGenerator(config);
-    this.#nftStorageUpload = nftStorageUpload;
   }
 
   async generate(indexOffset: number = 0, batchSize: number = sharp.concurrency()): Promise<ImageSchemaMap> {
@@ -88,9 +86,7 @@ export class Generator {
           console.log(`Image ${formattedImageNumber} done. ["${basename(path)}": ${width}x${height}]`);
 
           const mediaType = getType(path);
-          const cid = this.#nftStorageUpload
-            ? await this.#nftStorageUpload.uploadFile(path).catch(() => '')
-            : '';
+          const cid = `{cid::}<${path}>`;
 
           const schemaOutput = await this.#schemaGenerator.generate(layers, {
             ...literalVariables,
