@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http"
-import { combineLatest, filter, map, Observable, of, shareReplay, startWith, switchMap, withLatestFrom } from "rxjs"
+import { combineLatest, delay, filter, map, Observable, of, shareReplay, startWith, switchMap, take, withLatestFrom } from "rxjs"
 import { Asset, CurrentFilter } from "./view-gallery.classes"
 import { IAttributes, ICurrentFilter } from "./view-gallery.models"
 import { Summary } from "./view-gallery.service"
@@ -103,7 +103,11 @@ export const filterByProjectAndCollection =
 
         );
     })
-
+function getRandomInt(min: number, max: number): number {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 const cache: any = {};
 export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observable<Summary>) => {
     return source.pipe(
@@ -120,7 +124,7 @@ export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observab
                     for (const assetKey of assetKeys) {
                         const imgUrl = assetKey;
                         const jsonUrl = summary[projectKey][collectionKey].assets[assetKey];
-                        const assetMerged = combineLatest([of(imgUrl), httpClient.get(jsonUrl)]).pipe(map(([url, json]) => {
+                        const assetMerged = combineLatest([of(imgUrl), httpClient.get(jsonUrl).pipe(take(1), delay(getRandomInt(50, 250)))]).pipe(map(([url, json]) => {
                             return new Asset(url, json);
                         }))
                         result.push(assetMerged);

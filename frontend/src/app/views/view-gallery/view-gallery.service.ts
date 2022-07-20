@@ -14,9 +14,7 @@ import {
 } from 'rxjs';
 import {
   AttributeFilter,
-  IAttributes,
   ICurrentFilter,
-  IVariant,
 } from './view-gallery.models';
 import { CurrentFilter } from './view-gallery.classes';
 import { HttpClient } from '@angular/common/http';
