@@ -74,7 +74,7 @@ export class PreviewAnimation {
     for (let i = 0; i < quantity; i++) {
       const {delay, repeat, quality} = animation;
       const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d') as any;
 
       const outputPath = insertStringVariables(previewAnimationOutputPath, {index: i, quantity});
       fs.mkdirSync(dirname(outputPath), {recursive: true});
