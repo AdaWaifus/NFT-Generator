@@ -69,3 +69,11 @@ export interface AttributeFilter {
   variant: string;
   value: boolean;
 }
+export interface RarityFile {
+  [key: string]: RarityEntry[]
+}
+export interface RarityEntry {
+  attributeValue: string;
+  count: number;
+  percent: number;
+}

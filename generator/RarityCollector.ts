@@ -1,7 +1,7 @@
-import {dirname, join} from 'path';
-import {readdir, writeFile} from 'fs/promises';
-import {Config} from './Config';
-import {normalizePath, getAttributeKeyValuePairs} from './utils';
+import { dirname, join } from 'path';
+import { readdir, writeFile } from 'fs/promises';
+import { Config } from './Config';
+import { normalizePath, getAttributeKeyValuePairs } from './utils';
 
 export interface RarityEntry {
   attributeValue: string;
@@ -17,10 +17,10 @@ export class RarityCollector {
   }
 
   async collect(): Promise<[string, Record<string, RarityEntry[]>]> {
-    const {amount, assets, schema, rarityCollection} = this.#config;
-    const {outputPath: schemaOutputPath, attributesKey} = schema;
-    const {images, order} = assets;
-    const {outputPath} = rarityCollection;
+    const { amount, assets, schema, rarityCollection } = this.#config;
+    const { outputPath: schemaOutputPath, attributesKey } = schema;
+    const { images, order } = assets;
+    const { outputPath } = rarityCollection;
     const schemaOutputDir = dirname(schemaOutputPath);
     const schemaPaths = (await readdir(dirname(schemaOutputPath)).catch(() => [])).map(schemaFilename =>
       normalizePath(join(schemaOutputDir, schemaFilename)),

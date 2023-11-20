@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http"
 import { combineLatest, delay, filter, map, Observable, of, shareReplay, startWith, switchMap, take, withLatestFrom } from "rxjs"
 import { Asset, CurrentFilter } from "./view-gallery.classes"
-import { IAttributes, ICurrentFilter } from "./view-gallery.models"
+import { IAttributes, ICurrentFilter, RarityFile } from "./view-gallery.models"
 import { Summary } from "./view-gallery.service"
 function sortByNumber(a: Asset, b: Asset) {
     const aN = +a.nft.name.substring(11);
@@ -108,7 +108,7 @@ function getRandomInt(min: number, max: number): number {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-const cache: any = {};
+const rarity: Observable<RarityFile>[] = [];
 export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observable<Summary>) => {
     return source.pipe(
         switchMap((summary) => {
@@ -121,6 +121,7 @@ export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observab
 
                     const collection = summary[projectKey][collectionKey];
                     const assetKeys = Object.keys(collection.assets);
+                    rarity.push(httpClient.get<RarityFile>(collection.rarity).pipe(take(1)));
                     for (const assetKey of assetKeys) {
                         const imgUrl = assetKey;
                         const jsonUrl = summary[projectKey][collectionKey].assets[assetKey];
@@ -141,10 +142,13 @@ export const mergeAssetWithJson = (httpClient: HttpClient) => ((source: Observab
     )
 })
 
-export const getFiltersFromAttributes = (source: Observable<any>) => source.pipe(map(() => _assets),
-    map((assets: Asset[]) => {
+export const getFiltersFromAttributes = (source: Observable<any>) => source.pipe(switchMap(() => {
+    const assets = of(_assets);
+    const rarities = combineLatest(rarity);
+    return combineLatest([assets, rarities]);
+}),
+    map(([assets, rarities]: [Asset[], RarityFile[]]) => {
         const result: IAttributes[] = [];
-
         for (const asset of assets) {
             const attributesKeys = Object.keys(asset.nft.attributes);
             for (const attributesKey of attributesKeys) {
